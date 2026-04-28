@@ -57,7 +57,7 @@
                     @forelse($unpaidPayments as $payment)
                         <li class="list-group-item">
                             <div class="fw-semibold">{{ $payment->student->name }}</div>
-                            <small class="text-muted">Hạn: {{ $payment->payment_due_date?->format('d/m/Y') }} - {{ number_format($payment->amount - $payment->paid_amount, 0, ',', '.') }} đ</small>
+                            <small class="text-muted">Tạo ngày: {{ $payment->created_at?->format('d/m/Y') }} - {{ number_format($payment->amount - $payment->paid_amount, 0, ',', '.') }} đ</small>
                         </li>
                     @empty
                         <li class="list-group-item text-muted">Không có công nợ.</li>

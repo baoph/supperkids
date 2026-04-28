@@ -21,13 +21,13 @@ class ReportController extends Controller
         $paymentBaseQuery = Payment::query();
 
         if ($period === 'month') {
-            $paymentBaseQuery->whereYear('payment_due_date', $year)->whereMonth('payment_due_date', $month);
+            $paymentBaseQuery->whereYear('created_at', $year)->whereMonth('created_at', $month);
         } elseif ($period === 'quarter') {
             $startMonth = ($quarter - 1) * 3 + 1;
             $endMonth = $startMonth + 2;
-            $paymentBaseQuery->whereYear('payment_due_date', $year)->whereBetween(DB::raw('MONTH(payment_due_date)'), [$startMonth, $endMonth]);
+            $paymentBaseQuery->whereYear('created_at', $year)->whereBetween(DB::raw('MONTH(created_at)'), [$startMonth, $endMonth]);
         } else {
-            $paymentBaseQuery->whereYear('payment_due_date', $year);
+            $paymentBaseQuery->whereYear('created_at', $year);
         }
 
         $revenueReport = (clone $paymentBaseQuery)

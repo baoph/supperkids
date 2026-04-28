@@ -10,6 +10,7 @@
         </select>
         @error('student_id') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+
     <div class="col-md-6">
         <label class="form-label">Lớp học</label>
         <select name="class_id" class="form-select">
@@ -19,31 +20,34 @@
             @endforeach
         </select>
     </div>
-    <div class="col-md-4">
-        <label class="form-label">Mã hóa đơn *</label>
-        <input type="text" name="invoice_code" value="{{ old('invoice_code', $payment->invoice_code ?? '') }}" class="form-control @error('invoice_code') is-invalid @enderror">
-        @error('invoice_code') <div class="invalid-feedback">{{ $message }}</div> @enderror
-    </div>
+
     <div class="col-md-4">
         <label class="form-label">Số tiền phải thu *</label>
         <input type="number" min="0" step="0.01" name="amount" value="{{ old('amount', $payment->amount ?? 0) }}" class="form-control @error('amount') is-invalid @enderror">
         @error('amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+
     <div class="col-md-4">
         <label class="form-label">Số tiền đã thu *</label>
         <input type="number" min="0" step="0.01" name="paid_amount" value="{{ old('paid_amount', $payment->paid_amount ?? 0) }}" class="form-control @error('paid_amount') is-invalid @enderror">
         @error('paid_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
+
     <div class="col-md-4">
-        <label class="form-label">Hạn thanh toán *</label>
-        <input type="date" name="payment_due_date" value="{{ old('payment_due_date', isset($payment->payment_due_date) ? $payment->payment_due_date->format('Y-m-d') : '') }}" class="form-control @error('payment_due_date') is-invalid @enderror">
-        @error('payment_due_date') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <label class="form-label">Hình thức thanh toán *</label>
+        <select name="payment_method" class="form-select @error('payment_method') is-invalid @enderror">
+            <option value="cash" @selected(old('payment_method', $payment->payment_method ?? 'cash') === 'cash')>Tiền mặt</option>
+            <option value="transfer" @selected(old('payment_method', $payment->payment_method ?? '') === 'transfer')>Chuyển khoản</option>
+        </select>
+        @error('payment_method') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-    <div class="col-md-4">
+
+    <div class="col-md-6">
         <label class="form-label">Ngày thanh toán</label>
         <input type="date" name="payment_date" value="{{ old('payment_date', isset($payment->payment_date) ? $payment->payment_date->format('Y-m-d') : '') }}" class="form-control">
     </div>
-    <div class="col-md-4">
+
+    <div class="col-md-6">
         <label class="form-label">Trạng thái *</label>
         <select name="status" class="form-select">
             <option value="unpaid" @selected(old('status', $payment->status ?? 'unpaid') === 'unpaid')>Chưa thu</option>
@@ -51,6 +55,7 @@
             <option value="paid" @selected(old('status', $payment->status ?? '') === 'paid')>Đã thu</option>
         </select>
     </div>
+
     <div class="col-12">
         <label class="form-label">Ghi chú</label>
         <textarea name="note" rows="3" class="form-control">{{ old('note', $payment->note ?? '') }}</textarea>

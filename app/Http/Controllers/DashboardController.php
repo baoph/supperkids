@@ -37,7 +37,7 @@ class DashboardController extends Controller
 
         $unpaidPayments = Payment::with('student')
             ->whereIn('status', ['unpaid', 'partial'])
-            ->orderBy('payment_due_date')
+            ->orderByDesc('created_at')
             ->limit(10)
             ->get();
 

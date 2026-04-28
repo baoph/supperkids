@@ -26,7 +26,8 @@
                     <th>Lớp</th>
                     <th>Phải thu</th>
                     <th>Đã thu</th>
-                    <th>Hạn</th>
+                    <th>Còn nợ</th>
+                    <th>Hình thức</th>
                     <th>Trạng thái</th>
                     <th class="text-end">Thao tác</th>
                 </tr>
@@ -34,12 +35,13 @@
             <tbody>
                 @forelse($payments as $payment)
                     <tr>
-                        <td>{{ $payment->invoice_code }}</td>
+                        <td>{{ $payment->invoice_number }}</td>
                         <td>{{ $payment->student->name }}</td>
                         <td>{{ $payment->schoolClass->name ?? '-' }}</td>
-                        <td>{{ number_format($payment->amount, 0, ',', '.') }} đ</td>
-                        <td>{{ number_format($payment->paid_amount, 0, ',', '.') }} đ</td>
-                        <td>{{ $payment->payment_due_date?->format('d/m/Y') }}</td>
+                        <td>{{ number_format($payment->amount, 0, ',', '.') }} VNĐ</td>
+                        <td>{{ number_format($payment->paid_amount, 0, ',', '.') }} VNĐ</td>
+                        <td>{{ number_format($debtByStudent[$payment->student_id] ?? 0, 0, ',', '.') }} VNĐ</td>
+                        <td>{{ $payment->payment_method === 'cash' ? 'Tiền mặt' : 'Chuyển khoản' }}</td>
                         <td>{{ $payment->status }}</td>
                         <td class="text-end">
                             <a href="{{ route('payments.show', $payment) }}" class="btn btn-outline-info btn-sm">Xem</a>
@@ -51,7 +53,7 @@
                         </td>
                     </tr>
                 @empty
-                    <tr><td colspan="8" class="text-center text-muted">Chưa có dữ liệu học phí.</td></tr>
+                    <tr><td colspan="9" class="text-center text-muted">Chưa có dữ liệu học phí.</td></tr>
                 @endforelse
             </tbody>
         </table>

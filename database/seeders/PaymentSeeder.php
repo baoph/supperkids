@@ -33,10 +33,10 @@ class PaymentSeeder extends Seeder
             Payment::create([
                 'student_id' => $student->id,
                 'class_id' => $class?->id,
-                'invoice_code' => 'INV-' . now()->format('Ym') . '-' . str_pad((string) ($index + 1), 4, '0', STR_PAD_LEFT),
+                'invoice_number' => Payment::generateInvoiceNumber(),
                 'amount' => $amount,
                 'paid_amount' => $paidAmount,
-                'payment_due_date' => now()->startOfMonth()->addDays(10)->toDateString(),
+                'payment_method' => $index % 2 === 0 ? 'cash' : 'transfer',
                 'payment_date' => $status === 'paid' ? now()->startOfMonth()->addDays(8)->toDateString() : null,
                 'status' => $status,
                 'note' => $status === 'unpaid' ? 'Cần nhắc phụ huynh đóng học phí.' : null,

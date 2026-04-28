@@ -13,19 +13,45 @@ class Payment extends Model
     protected $fillable = [
         'student_id',
         'class_id',
-        'invoice_code',
+        'invoice_number',
         'amount',
         'paid_amount',
-        'payment_due_date',
+        'payment_method',
         'payment_date',
         'status',
         'note',
     ];
 
     protected $casts = [
-        'payment_due_date' => 'date',
         'payment_date' => 'date',
     ];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Payment $payment): void {
+            if (empty($payment->invoice_number)) {
+                $payment->invoice_number = self::generateInvoiceNumber();
+            }
+        });
+    }
+
+    public static function generateInvoiceNumber(): string
+    {
+        $prefix = 'INV-' . now()->format('Ymd') . '-';
+
+        $lastInvoice = self::query()
+            ->where('invoice_number', 'like', $prefix . '%')
+            ->orderByDesc('invoice_number')
+            ->value('invoice_number');
+
+        $lastSequence = 0;
+
+        if ($lastInvoice) {
+            $lastSequence = (int) substr($lastInvoice, -4);
+        }
+
+        return $prefix . str_pad((string) ($lastSequence + 1), 4, '0', STR_PAD_LEFT);
+    }
 
     public function student(): BelongsTo
     {

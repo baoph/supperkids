@@ -32,7 +32,7 @@
             <div class="card-header bg-white">Lịch sử học phí</div>
             <ul class="list-group list-group-flush">
                 @forelse($student->payments as $payment)
-                    <li class="list-group-item">{{ $payment->invoice_code }} - {{ number_format($payment->paid_amount, 0, ',', '.') }} đ ({{ $payment->status }})</li>
+                    <li class="list-group-item">{{ $payment->invoice_number }} - {{ number_format($payment->paid_amount, 0, ',', '.') }} đ ({{ $payment->status }})</li>
                 @empty
                     <li class="list-group-item text-muted">Chưa có thanh toán.</li>
                 @endforelse

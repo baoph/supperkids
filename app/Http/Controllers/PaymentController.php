@@ -7,6 +7,7 @@ use App\Models\SchoolClass;
 use App\Models\Student;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class PaymentController extends Controller
@@ -21,7 +22,32 @@ class PaymentController extends Controller
             ->paginate(10)
             ->withQueryString();
 
-        return view('payments.index', compact('payments', 'status'));
+        $studentIds = $payments->getCollection()->pluck('student_id')->unique()->filter()->values();
+
+        $debtByStudent = [];
+
+        if ($studentIds->isNotEmpty()) {
+            $totalTuitionByStudent = DB::table('class_student')
+                ->join('classes', 'classes.id', '=', 'class_student.class_id')
+                ->selectRaw('class_student.student_id, COALESCE(SUM(classes.tuition_fee), 0) as total_tuition')
+                ->whereIn('class_student.student_id', $studentIds)
+                ->groupBy('class_student.student_id')
+                ->pluck('total_tuition', 'class_student.student_id');
+
+            $totalPaidByStudent = Payment::query()
+                ->selectRaw('student_id, COALESCE(SUM(paid_amount), 0) as total_paid')
+                ->whereIn('student_id', $studentIds)
+                ->groupBy('student_id')
+                ->pluck('total_paid', 'student_id');
+
+            foreach ($studentIds as $studentId) {
+                $totalTuition = (float) ($totalTuitionByStudent[$studentId] ?? 0);
+                $totalPaid = (float) ($totalPaidByStudent[$studentId] ?? 0);
+                $debtByStudent[$studentId] = max(0, $totalTuition - $totalPaid);
+            }
+        }
+
+        return view('payments.index', compact('payments', 'status', 'debtByStudent'));
     }
 
     public function create(): View
@@ -37,10 +63,9 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
             'class_id' => 'nullable|exists:classes,id',
-            'invoice_code' => 'required|string|max:50|unique:payments,invoice_code',
             'amount' => 'required|numeric|min:0',
             'paid_amount' => 'required|numeric|min:0',
-            'payment_due_date' => 'required|date',
+            'payment_method' => 'required|in:cash,transfer',
             'payment_date' => 'nullable|date',
             'status' => 'required|in:unpaid,partial,paid',
             'note' => 'nullable|string',
@@ -49,6 +74,8 @@ class PaymentController extends Controller
         if ($validated['paid_amount'] > $validated['amount']) {
             return back()->withErrors(['paid_amount' => 'Số tiền đã thu không được lớn hơn số tiền phải thu.'])->withInput();
         }
+
+        $validated['invoice_number'] = Payment::generateInvoiceNumber();
 
         Payment::create($validated);
 
@@ -75,10 +102,9 @@ class PaymentController extends Controller
         $validated = $request->validate([
             'student_id' => 'required|exists:students,id',
             'class_id' => 'nullable|exists:classes,id',
-            'invoice_code' => 'required|string|max:50|unique:payments,invoice_code,' . $payment->id,
             'amount' => 'required|numeric|min:0',
             'paid_amount' => 'required|numeric|min:0',
-            'payment_due_date' => 'required|date',
+            'payment_method' => 'required|in:cash,transfer',
             'payment_date' => 'nullable|date',
             'status' => 'required|in:unpaid,partial,paid',
             'note' => 'nullable|string',
