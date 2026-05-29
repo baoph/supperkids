@@ -1,5 +1,5 @@
 // Fonts
-@import url('https://fonts.bunny.net/css?family=Inter:400,500,600,700|Nunito:400,600,700');
+@import url('https://fonts.bunny.net/css?family=Inter:300,400,500,600,700');
 
 // Variables
 @import 'variables';
@@ -7,53 +7,122 @@
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
 
-// ── Custom Styles ──────────────────────────────────────────────
+// ── Soft & Modern Theme ─────────────────────────────────────────
 
-// Smooth transitions
-* {
-    transition: background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease, color 0.15s ease;
-}
-
+// Global
 body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    color: #374151;
 }
 
-// Navbar
+a { text-decoration: none; }
+
+// ── Navbar ──────────────────────────────────────────────────────
 .navbar {
-    padding-top: 0.75rem;
-    padding-bottom: 0.75rem;
-    background: linear-gradient(135deg, $primary 0%, darken($primary, 12%) 100%) !important;
+    padding: 0.65rem 0;
+    background: linear-gradient(135deg, #7c5cfc 0%, #6343e0 100%) !important;
+    border: none;
 
     .navbar-brand {
         font-weight: 700;
-        font-size: 1.15rem;
-        letter-spacing: -0.02em;
+        font-size: 1.1rem;
+        letter-spacing: -0.01em;
+        color: #fff !important;
+
+        i { opacity: 0.9; }
+    }
+
+    .navbar-toggler {
+        border: none;
+        padding: 0.35rem 0.5rem;
+        color: #fff;
+        font-size: 1.25rem;
+        outline: none !important;
+        box-shadow: none !important;
+        // Ensure clickability on mobile
+        position: relative;
+        z-index: 1060;
+        -webkit-tap-highlight-color: transparent;
+
+        &:focus, &:active {
+            outline: none !important;
+            box-shadow: none !important;
+        }
+
+        .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.95%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
     }
 
     .nav-link {
+        color: rgba(255,255,255,0.85) !important;
         font-weight: 500;
-        padding: 0.5rem 0.85rem !important;
-        border-radius: $border-radius-sm;
-        font-size: 0.85rem;
+        font-size: 0.84rem;
+        padding: 0.45rem 0.75rem !important;
+        border-radius: 0.5rem;
+        transition: all 0.2s ease;
+        white-space: nowrap;
 
-        &:hover, &.active {
-            background: rgba(255, 255, 255, 0.15);
+        i { font-size: 0.9rem; }
+
+        &:hover {
+            color: #fff !important;
+            background: rgba(255,255,255,0.15);
+        }
+
+        &.active {
+            color: #fff !important;
+            background: rgba(255,255,255,0.2);
+        }
+    }
+
+    .dropdown-toggle::after { margin-left: 0.35rem; }
+}
+
+// Mobile menu
+@media (max-width: 991.98px) {
+    .navbar {
+        .navbar-collapse {
+            background: rgba(108, 67, 224, 0.98);
+            border-radius: 0 0 $border-radius-lg $border-radius-lg;
+            padding: 0.75rem;
+            margin-top: 0.5rem;
+
+            // Fix: ensure collapse is interactive
+            &.collapsing,
+            &.show {
+                position: relative;
+                z-index: 1050;
+            }
+        }
+
+        .navbar-nav {
+            gap: 0.15rem !important;
+        }
+
+        .nav-link {
+            padding: 0.6rem 0.85rem !important;
+            border-radius: 0.5rem;
         }
     }
 }
 
-// Cards
+// ── Cards ────────────────────────────────────────────────────────
 .card {
-    border: none;
+    border: 1px solid rgba(0,0,0,0.04);
     border-radius: $card-border-radius;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    background: #fff;
     overflow: hidden;
 
     .card-header {
-        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-        padding: 1rem 1.25rem;
+        background: #fff;
+        border-bottom: 1px solid #f3f4f6;
+        padding: 0.9rem 1.25rem;
         font-weight: 600;
+        font-size: 0.9rem;
+        color: #1f2937;
     }
 
     .card-body {
@@ -61,56 +130,86 @@ body {
     }
 }
 
-// Tables
+// ── Tables ────────────────────────────────────────────────────────
 .table {
-    th {
+    margin-bottom: 0;
+
+    thead th {
         font-weight: 600;
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         text-transform: uppercase;
-        letter-spacing: 0.04em;
-        color: #64748b;
-        background: #f8fafc;
-        border-bottom-width: 1px;
-        padding: 0.85rem 1rem;
+        letter-spacing: 0.05em;
+        color: #9ca3af;
+        background: #fafbfc;
+        border-bottom: 1px solid #f3f4f6;
+        padding: 0.8rem 1rem;
+        white-space: nowrap;
     }
 
-    td {
-        padding: 0.85rem 1rem;
+    tbody td {
+        padding: 0.8rem 1rem;
         vertical-align: middle;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid #f9fafb;
+        color: #374151;
+        font-size: 0.865rem;
     }
 
     &.table-hover tbody tr:hover {
-        background-color: #f8fafc;
+        background-color: #faf8ff;
+    }
+
+    // Borderless variant (used in show views)
+    &.table-borderless td {
+        border: none;
+        padding: 0.45rem 0.75rem;
     }
 }
 
-// Forms
+// ── Forms ─────────────────────────────────────────────────────────
 .form-control, .form-select {
-    border-color: #e2e8f0;
-    padding: 0.55rem 0.85rem;
+    border-color: #e5e7eb;
+    font-size: 0.875rem;
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.875rem;
+    color: #374151;
+    background-color: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &::placeholder {
+        color: #c0c5cf;
+        font-weight: 400;
+    }
 
     &:focus {
         border-color: $primary;
-        box-shadow: 0 0 0 3px rgba($primary, 0.12);
+        box-shadow: 0 0 0 3px rgba($primary, 0.1);
+        background-color: #fff;
     }
 }
 
 .form-label {
+    font-weight: 500;
     font-size: 0.82rem;
-    color: #475569;
-    margin-bottom: 0.35rem;
+    color: #4b5563;
+    margin-bottom: 0.3rem;
 }
 
-// Buttons
+.form-check-input:checked {
+    background-color: $primary;
+    border-color: $primary;
+}
+
+// ── Buttons ───────────────────────────────────────────────────────
 .btn {
     font-weight: 500;
     font-size: 0.84rem;
-    padding: 0.45rem 1rem;
-    border-radius: $border-radius-sm;
+    padding: 0.5rem 1.1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    letter-spacing: 0.01em;
 
     &.btn-sm {
-        padding: 0.3rem 0.7rem;
+        padding: 0.3rem 0.65rem;
         font-size: 0.78rem;
     }
 }
@@ -118,115 +217,371 @@ body {
 .btn-primary {
     background: $primary;
     border-color: $primary;
+    color: #fff;
 
-    &:hover {
+    &:hover, &:focus {
         background: darken($primary, 8%);
         border-color: darken($primary, 8%);
-        transform: translateY(-1px);
-        box-shadow: 0 4px 6px rgba($primary, 0.25);
+        box-shadow: 0 4px 12px rgba($primary, 0.3);
     }
 }
 
-.btn-outline-primary:hover,
-.btn-outline-info:hover,
-.btn-outline-danger:hover {
-    transform: translateY(-1px);
+.btn-outline-primary {
+    color: $primary;
+    border-color: #e5e7eb;
+
+    &:hover {
+        background: rgba($primary, 0.06);
+        border-color: $primary;
+        color: $primary;
+    }
 }
 
-// Badges
+.btn-outline-secondary {
+    color: #6b7280;
+    border-color: #e5e7eb;
+
+    &:hover {
+        background: #f9fafb;
+        color: #374151;
+        border-color: #d1d5db;
+    }
+}
+
+.btn-outline-info {
+    color: #6b7280;
+    border-color: #e5e7eb;
+
+    &:hover {
+        background: rgba($info, 0.08);
+        border-color: $info;
+        color: $info;
+    }
+}
+
+.btn-outline-danger {
+    color: #6b7280;
+    border-color: #e5e7eb;
+
+    &:hover {
+        background: rgba($danger, 0.06);
+        border-color: $danger;
+        color: $danger;
+    }
+}
+
+// Action button group – softer look
+.btn-group-actions {
+    display: inline-flex;
+    gap: 0.35rem;
+
+    .btn {
+        border-radius: 0.45rem !important;
+        width: 32px;
+        height: 32px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+        background: #fff;
+        font-size: 0.82rem;
+
+        &:hover {
+            border-color: $primary;
+            color: $primary;
+            background: rgba($primary, 0.04);
+        }
+
+        &.btn-action-danger:hover {
+            border-color: $danger;
+            color: $danger;
+            background: rgba($danger, 0.04);
+        }
+    }
+}
+
+// ── Badges ────────────────────────────────────────────────────────
 .badge {
     font-weight: 500;
-    padding: 0.35em 0.65em;
-    font-size: 0.78rem;
+    padding: 0.3em 0.65em;
+    font-size: 0.75rem;
+    border-radius: 0.375rem;
+    letter-spacing: 0.02em;
 }
 
-// Alerts
+// Soft pastel badges
+.badge-soft-purple {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+.badge-soft-teal {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+
+.badge-soft-orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.badge-soft-green {
+    background: #dcfce7;
+    color: #16a34a;
+}
+
+.badge-soft-red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.badge-soft-blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.badge-soft-gray {
+    background: #f3f4f6;
+    color: #6b7280;
+}
+
+.badge-soft-pink {
+    background: #fce7f3;
+    color: #db2777;
+}
+
+.badge-soft-yellow {
+    background: #fef9c3;
+    color: #ca8a04;
+}
+
+// Status dot badges
+.status-dot {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.84rem;
+    font-weight: 500;
+
+    &::before {
+        content: '';
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        flex-shrink: 0;
+    }
+
+    &.status-active::before { background: $success; }
+    &.status-inactive::before { background: $danger; }
+    &.status-new::before { background: $info; }
+    &.status-open::before { background: $success; }
+    &.status-closed::before { background: #9ca3af; }
+    &.status-paid::before { background: $success; }
+    &.status-unpaid::before { background: $danger; }
+    &.status-partial::before { background: $warning; }
+}
+
+// ── Alerts ────────────────────────────────────────────────────────
 .alert {
     border: none;
     border-radius: $border-radius;
     font-size: 0.875rem;
+    font-weight: 500;
 }
 
-// Pagination
+.alert-success {
+    background: #ecfdf5;
+    color: #065f46;
+}
+
+// ── Pagination ────────────────────────────────────────────────────
 .pagination {
+    gap: 0.2rem;
+
     .page-link {
-        border-radius: $border-radius-sm !important;
-        margin: 0 2px;
+        border-radius: 0.45rem !important;
         font-size: 0.82rem;
-        border: none;
-        color: #475569;
+        padding: 0.35rem 0.7rem;
+        border: 1px solid #e5e7eb;
+        color: #6b7280;
+        min-width: 34px;
+        text-align: center;
 
         &:hover {
-            background: rgba($primary, 0.08);
+            background: rgba($primary, 0.06);
+            border-color: rgba($primary, 0.3);
             color: $primary;
         }
     }
 
     .page-item.active .page-link {
         background: $primary;
+        border-color: $primary;
         color: #fff;
+        box-shadow: 0 2px 6px rgba($primary, 0.25);
+    }
+
+    .page-item.disabled .page-link {
+        color: #d1d5db;
+        background: transparent;
     }
 }
 
-// Stat cards (dashboard)
+// ── Dashboard stat cards ──────────────────────────────────────────
 .stat-card {
     position: relative;
     overflow: hidden;
+    border: none !important;
 
-    .stat-icon {
-        position: absolute;
-        right: 1rem;
-        top: 50%;
-        transform: translateY(-50%);
-        font-size: 2.5rem;
-        opacity: 0.1;
-    }
-
-    h3 {
+    .stat-value {
         font-weight: 700;
         font-size: 1.75rem;
+        color: #1f2937;
+        line-height: 1.2;
+    }
+
+    .stat-label {
+        font-size: 0.78rem;
+        font-weight: 500;
+        color: #9ca3af;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+
+    .stat-icon-bg {
+        width: 42px;
+        height: 42px;
+        border-radius: 0.65rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+}
+
+// ── List group ────────────────────────────────────────────────────
+.list-group-item {
+    border-color: #f3f4f6;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.875rem;
+}
+
+// ── Dropdown ──────────────────────────────────────────────────────
+.dropdown-menu {
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border-radius: $border-radius;
+    padding: 0.4rem;
+
+    .dropdown-item {
+        border-radius: 0.35rem;
+        padding: 0.5rem 0.85rem;
+        font-size: 0.84rem;
+
+        &:hover {
+            background: #f5f3ff;
+            color: $primary;
+        }
+    }
+}
+
+// ── Page header ───────────────────────────────────────────────────
+.page-header {
+    margin-bottom: 1.25rem;
+
+    .page-title {
+        font-weight: 700;
+        font-size: 1.25rem;
+        color: #1f2937;
+        margin-bottom: 0.15rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.84rem;
+        color: #9ca3af;
         margin-bottom: 0;
     }
-
-    h6 {
-        font-size: 0.78rem;
-        text-transform: uppercase;
-        letter-spacing: 0.04em;
-    }
 }
 
-// Smooth page transition
+// ── Page animation ────────────────────────────────────────────────
 main {
-    animation: fadeIn 0.25s ease;
+    animation: fadeInUp 0.3s ease;
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(6px); }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(8px); }
     to   { opacity: 1; transform: translateY(0); }
 }
 
-// List group items
-.list-group-item {
-    border-color: #f1f5f9;
-    padding: 0.85rem 1.25rem;
+// ── Showing text ──────────────────────────────────────────────────
+.showing-text {
+    font-size: 0.8rem;
+    color: #9ca3af;
 }
 
-// Dropdown
-.dropdown-menu {
-    border: none;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border-radius: $border-radius;
+// ── Empty state ────────────────────────────────────────────────────
+.empty-state {
+    padding: 3rem 1rem;
+    text-align: center;
+    color: #9ca3af;
+
+    i {
+        font-size: 2.5rem;
+        margin-bottom: 0.75rem;
+        display: block;
+        opacity: 0.5;
+    }
+
+    p {
+        font-size: 0.875rem;
+        margin: 0;
+    }
 }
 
-// Responsive tweaks
+// ── User avatar circle ────────────────────────────────────────────
+.user-avatar-sm {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.25);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: #fff;
+}
+
+// ── Responsive ────────────────────────────────────────────────────
 @media (max-width: 768px) {
-    .card-header {
-        flex-direction: column;
-        gap: 0.5rem;
+    .page-header {
+        .d-flex {
+            flex-direction: column;
+            align-items: flex-start !important;
+            gap: 0.75rem;
+        }
     }
 
-    .table th, .table td {
-        padding: 0.65rem 0.75rem;
-        font-size: 0.8rem;
+    .table thead th,
+    .table tbody td {
+        padding: 0.6rem 0.65rem;
+        font-size: 0.78rem;
     }
+
+    .stat-card .stat-value {
+        font-size: 1.35rem;
+    }
+}
+
+// Fix: ensure all interactive elements have no transition on transform
+// that could interfere with click events
+.navbar-toggler,
+.btn,
+.nav-link,
+.dropdown-item,
+.form-control,
+.form-select {
+    -webkit-tap-highlight-color: transparent;
 }

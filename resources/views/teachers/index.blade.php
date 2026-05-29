@@ -1,10 +1,10 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3">
+<div class="page-header d-flex justify-content-between align-items-center">
     <div>
-        <h4 class="fw-bold mb-1"><i class="bi bi-person-workspace me-2 text-primary"></i>Quản lý giáo viên</h4>
-        <p class="text-muted mb-0 small">Danh sách tất cả giáo viên trong hệ thống</p>
+        <h4 class="page-title">Giáo viên</h4>
+        <p class="page-subtitle">Quản lý danh sách giáo viên</p>
     </div>
     <a href="{{ route('teachers.create') }}" class="btn btn-primary">
         <i class="bi bi-plus-lg me-1"></i> Thêm giáo viên
@@ -13,7 +13,7 @@
 
 <div class="card">
     <div class="table-responsive">
-        <table class="table table-hover mb-0">
+        <table class="table table-hover">
             <thead>
                 <tr>
                     <th>Họ tên</th>
@@ -28,30 +28,30 @@
                 @forelse($teachers as $teacher)
                     <tr>
                         <td class="fw-semibold">{{ $teacher->name }}</td>
-                        <td><span class="badge text-bg-light border">{{ $teacher->specialization }}</span></td>
+                        <td><span class="badge badge-soft-teal">{{ $teacher->specialization }}</span></td>
                         <td>
                             <div>{{ $teacher->phone }}</div>
-                            <small class="text-muted">{{ $teacher->email }}</small>
+                            <small style="color:#9ca3af;">{{ $teacher->email }}</small>
                         </td>
-                        <td><span class="badge text-bg-primary">{{ $teacher->classes_count }}</span></td>
+                        <td><span class="badge badge-soft-purple">{{ $teacher->classes_count }}</span></td>
                         <td class="fw-semibold">{{ number_format($teacher->salary, 0, ',', '.') }} đ</td>
                         <td class="text-end">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('teachers.show', $teacher) }}" class="btn btn-outline-info" title="Xem"><i class="bi bi-eye"></i></a>
-                                <a href="{{ route('teachers.edit', $teacher) }}" class="btn btn-outline-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                            <div class="btn-group-actions">
+                                <a href="{{ route('teachers.show', $teacher) }}" class="btn" title="Xem"><i class="bi bi-eye"></i></a>
+                                <a href="{{ route('teachers.edit', $teacher) }}" class="btn" title="Sửa"><i class="bi bi-pencil"></i></a>
                                 <form action="{{ route('teachers.destroy', $teacher) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa giáo viên này?')">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-outline-danger btn-sm" title="Xóa"><i class="bi bi-trash"></i></button>
+                                    <button class="btn btn-action-danger" title="Xóa"><i class="bi bi-trash3"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="6" class="text-center py-5">
-                            <div class="text-muted">
-                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                Chưa có giáo viên
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <i class="bi bi-person-workspace"></i>
+                                <p>Chưa có giáo viên</p>
                             </div>
                         </td>
                     </tr>
@@ -60,7 +60,10 @@
         </table>
     </div>
     @if($teachers->hasPages())
-        <div class="card-body border-top">{{ $teachers->links() }}</div>
+        <div class="card-body border-top d-flex justify-content-between align-items-center">
+            <span class="showing-text">Hiển thị {{ $teachers->firstItem() }}–{{ $teachers->lastItem() }} / {{ $teachers->total() }}</span>
+            {{ $teachers->links() }}
+        </div>
     @endif
 </div>
 @endsection

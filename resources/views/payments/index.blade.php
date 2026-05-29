@@ -1,12 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+<div class="page-header mb-4">
     <div>
-        <h4 class="fw-bold mb-1"><i class="bi bi-wallet2 me-2 text-primary"></i>Quản lý học phí</h4>
-        <p class="text-muted mb-0 small">Theo dõi thu học phí và công nợ</p>
+        <h4 class="page-title"><i class="bi bi-wallet2 me-2"></i>Quản lý học phí</h4>
+        <p class="page-subtitle">Theo dõi thu học phí và công nợ</p>
     </div>
-    <div class="d-flex gap-2 align-items-center">
+    <div class="d-flex gap-2 align-items-center flex-wrap">
         <form method="GET" class="d-flex gap-2">
             <select name="status" class="form-select form-select-sm" style="min-width:160px">
                 <option value="">Tất cả trạng thái</option>
@@ -16,7 +16,7 @@
             </select>
             <button class="btn btn-outline-primary btn-sm"><i class="bi bi-funnel me-1"></i>Lọc</button>
         </form>
-        <a href="{{ route('payments.create') }}" class="btn btn-primary">
+        <a href="{{ route('payments.create') }}" class="btn btn-primary px-4">
             <i class="bi bi-plus-lg me-1"></i> Thêm học phí
         </a>
     </div>
@@ -48,33 +48,38 @@
                         <td class="text-success fw-semibold">{{ number_format($payment->paid_amount, 0, ',', '.') }} đ</td>
                         <td class="text-danger fw-semibold">{{ number_format($debtByStudent[$payment->student_id] ?? 0, 0, ',', '.') }} đ</td>
                         <td>
-                            <span class="badge text-bg-{{ $payment->payment_method === 'cash' ? 'warning' : 'info' }}">
-                                <i class="bi bi-{{ $payment->payment_method === 'cash' ? 'cash-stack' : 'bank' }} me-1"></i>
-                                {{ $payment->payment_method === 'cash' ? 'Tiền mặt' : 'Chuyển khoản' }}
-                            </span>
+                            @if($payment->payment_method === 'cash')
+                                <span class="badge-soft-orange"><i class="bi bi-cash-stack me-1"></i>Tiền mặt</span>
+                            @else
+                                <span class="badge-soft-teal"><i class="bi bi-bank me-1"></i>Chuyển khoản</span>
+                            @endif
                         </td>
                         <td>
-                            <span class="badge text-bg-{{ $payment->status === 'paid' ? 'success' : ($payment->status === 'partial' ? 'warning' : 'danger') }}">
-                                {{ $payment->status === 'paid' ? 'Đã thu' : ($payment->status === 'partial' ? 'Thu một phần' : 'Chưa thu') }}
-                            </span>
+                            @if($payment->status === 'paid')
+                                <span class="status-dot status-active"></span> Đã thu
+                            @elseif($payment->status === 'partial')
+                                <span class="status-dot status-warning"></span> Thu một phần
+                            @else
+                                <span class="status-dot status-inactive"></span> Chưa thu
+                            @endif
                         </td>
                         <td class="text-end">
-                            <div class="btn-group btn-group-sm">
-                                <a href="{{ route('payments.show', $payment) }}" class="btn btn-outline-info" title="Xem"><i class="bi bi-eye"></i></a>
-                                <a href="{{ route('payments.edit', $payment) }}" class="btn btn-outline-primary" title="Sửa"><i class="bi bi-pencil"></i></a>
+                            <div class="btn-group-actions">
+                                <a href="{{ route('payments.show', $payment) }}" class="btn btn-sm btn-light" title="Xem"><i class="bi bi-eye"></i></a>
+                                <a href="{{ route('payments.edit', $payment) }}" class="btn btn-sm btn-light" title="Sửa"><i class="bi bi-pencil"></i></a>
                                 <form action="{{ route('payments.destroy', $payment) }}" method="POST" class="d-inline" onsubmit="return confirm('Xóa phiếu học phí này?')">
                                     @csrf @method('DELETE')
-                                    <button class="btn btn-outline-danger btn-sm" title="Xóa"><i class="bi bi-trash"></i></button>
+                                    <button class="btn btn-sm btn-action-danger" title="Xóa"><i class="bi bi-trash"></i></button>
                                 </form>
                             </div>
                         </td>
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9" class="text-center py-5">
-                            <div class="text-muted">
-                                <i class="bi bi-inbox fs-1 d-block mb-2"></i>
-                                Chưa có dữ liệu học phí
+                        <td colspan="9">
+                            <div class="empty-state">
+                                <i class="bi bi-wallet2"></i>
+                                <p>Chưa có dữ liệu học phí</p>
                             </div>
                         </td>
                     </tr>
@@ -83,7 +88,10 @@
         </table>
     </div>
     @if($payments->hasPages())
-        <div class="card-body border-top">{{ $payments->links() }}</div>
+        <div class="card-body border-top d-flex justify-content-between align-items-center">
+            <span class="showing-text">Hiển thị {{ $payments->firstItem() }}–{{ $payments->lastItem() }} / {{ $payments->total() }} phiếu</span>
+            {{ $payments->links() }}
+        </div>
     @endif
 </div>
 @endsection

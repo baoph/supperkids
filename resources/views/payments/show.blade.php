@@ -1,23 +1,87 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white"><h5 class="mb-0">Chi tiết phiếu học phí</h5></div>
+<div class="page-header mb-4">
+    <div>
+        <h4 class="page-title"><i class="bi bi-receipt me-2"></i>Chi tiết phiếu học phí</h4>
+        <p class="page-subtitle">Mã hóa đơn: {{ $payment->invoice_number }}</p>
+    </div>
+    <a href="{{ route('payments.index') }}" class="btn btn-outline-secondary px-4">
+        <i class="bi bi-arrow-left me-1"></i> Quay lại
+    </a>
+</div>
+
+<div class="card">
     <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-6"><strong>Mã hóa đơn:</strong> {{ $payment->invoice_number }}</div>
-            <div class="col-md-6"><strong>Học sinh:</strong> {{ $payment->student->name }}</div>
-            <div class="col-md-6"><strong>Lớp:</strong> {{ $payment->schoolClass->name ?? '-' }}</div>
-            <div class="col-md-6"><strong>Giáo viên:</strong> {{ $payment->schoolClass->teacher->name ?? '-' }}</div>
-            <div class="col-md-6"><strong>Phải thu:</strong> {{ number_format($payment->amount, 0, ',', '.') }} đ</div>
-            <div class="col-md-6"><strong>Đã thu:</strong> {{ number_format($payment->paid_amount, 0, ',', '.') }} đ</div>
-            <div class="col-md-6"><strong>Hình thức thanh toán:</strong> {{ $payment->payment_method === 'cash' ? 'Tiền mặt' : 'Chuyển khoản' }}</div>
-            <div class="col-md-6"><strong>Ngày thanh toán:</strong> {{ $payment->payment_date?->format('d/m/Y') ?? 'Chưa thanh toán' }}</div>
-            <div class="col-md-6"><strong>Trạng thái:</strong> {{ $payment->status }}</div>
-            <div class="col-12"><strong>Ghi chú:</strong> {{ $payment->note ?? 'Không có' }}</div>
-        </div>
-        <div class="mt-3">
-            <a href="{{ route('payments.index') }}" class="btn btn-secondary btn-sm">Quay lại</a>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted" style="width:160px">Mã hóa đơn</td>
+                            <td class="fw-semibold">{{ $payment->invoice_number }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Học sinh</td>
+                            <td class="fw-semibold">{{ $payment->student->name }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Lớp</td>
+                            <td>{{ $payment->schoolClass->name ?? '—' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Giáo viên</td>
+                            <td>{{ $payment->schoolClass->teacher->name ?? '—' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-md-6">
+                <table class="table table-borderless mb-0">
+                    <tbody>
+                        <tr>
+                            <td class="text-muted" style="width:160px">Phải thu</td>
+                            <td class="fw-semibold">{{ number_format($payment->amount, 0, ',', '.') }} đ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Đã thu</td>
+                            <td class="fw-semibold text-success">{{ number_format($payment->paid_amount, 0, ',', '.') }} đ</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Hình thức</td>
+                            <td>
+                                @if($payment->payment_method === 'cash')
+                                    <span class="badge-soft-orange">Tiền mặt</span>
+                                @else
+                                    <span class="badge-soft-teal">Chuyển khoản</span>
+                                @endif
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Ngày thanh toán</td>
+                            <td>{{ $payment->payment_date?->format('d/m/Y') ?? '—' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="text-muted">Trạng thái</td>
+                            <td>
+                                @if($payment->status === 'paid')
+                                    <span class="status-dot status-active"></span> Đã thu
+                                @elseif($payment->status === 'partial')
+                                    <span class="status-dot status-warning"></span> Thu một phần
+                                @else
+                                    <span class="status-dot status-inactive"></span> Chưa thu
+                                @endif
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12">
+                <hr class="my-0">
+                <div class="pt-3">
+                    <span class="text-muted">Ghi chú:</span> {{ $payment->note ?? 'Không có' }}
+                </div>
+            </div>
         </div>
     </div>
 </div>

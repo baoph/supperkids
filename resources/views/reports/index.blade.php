@@ -1,8 +1,15 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card border-0 shadow-sm mb-3">
-    <div class="card-header bg-white"><h5 class="mb-0">Bộ lọc báo cáo</h5></div>
+<div class="page-header mb-4">
+    <div>
+        <h4 class="page-title"><i class="bi bi-bar-chart-line me-2"></i>Báo cáo thống kê</h4>
+        <p class="page-subtitle">Tổng hợp doanh thu, học phí và hiệu suất</p>
+    </div>
+</div>
+
+{{-- Filter --}}
+<div class="card mb-4">
     <div class="card-body">
         <form method="GET" class="row g-2 align-items-end">
             <div class="col-md-3">
@@ -30,81 +37,122 @@
                 </select>
             </div>
             <div class="col-md-3">
-                <button class="btn btn-primary w-100">Xem báo cáo</button>
+                <button class="btn btn-primary w-100"><i class="bi bi-search me-1"></i>Xem báo cáo</button>
             </div>
         </form>
     </div>
 </div>
 
-<div class="row g-3">
+{{-- Revenue & Fee Status --}}
+<div class="row g-4 mb-4">
     <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">Báo cáo doanh thu</div>
+        <div class="card h-100">
             <div class="card-body">
-                <p><strong>Dự kiến:</strong> {{ number_format($revenueReport->expected_revenue ?? 0, 0, ',', '.') }} đ</p>
-                <p><strong>Đã thu:</strong> {{ number_format($revenueReport->collected_revenue ?? 0, 0, ',', '.') }} đ</p>
-                <p><strong>Công nợ:</strong> {{ number_format(($revenueReport->expected_revenue ?? 0) - ($revenueReport->collected_revenue ?? 0), 0, ',', '.') }} đ</p>
-            </div>
-        </div>
-    </div>
-    <div class="col-lg-6">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-header bg-white">Báo cáo học phí</div>
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <thead><tr><th>Trạng thái</th><th>Số phiếu</th><th>Công nợ</th></tr></thead>
+                <h6 class="text-uppercase text-muted small fw-semibold mb-3">Báo cáo doanh thu</h6>
+                <table class="table table-borderless mb-0">
                     <tbody>
-                    @forelse($feeStatusReport as $row)
                         <tr>
-                            <td>{{ $row->status }}</td>
-                            <td>{{ $row->total_records }}</td>
-                            <td>{{ number_format($row->outstanding ?? 0, 0, ',', '.') }} đ</td>
+                            <td class="text-muted">Dự kiến</td>
+                            <td class="fw-semibold text-end">{{ number_format($revenueReport->expected_revenue ?? 0, 0, ',', '.') }} đ</td>
                         </tr>
-                    @empty
-                        <tr><td colspan="3" class="text-muted text-center">Không có dữ liệu</td></tr>
-                    @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">Báo cáo học sinh</div>
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <thead><tr><th>Trạng thái</th><th>Số lượng</th></tr></thead>
-                    <tbody>
-                    @forelse($studentReport as $row)
-                        <tr><td>{{ $row->status }}</td><td>{{ $row->total }}</td></tr>
-                    @empty
-                        <tr><td colspan="2" class="text-muted text-center">Không có dữ liệu</td></tr>
-                    @endforelse
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card border-0 shadow-sm">
-            <div class="card-header bg-white">Hiệu suất giáo viên</div>
-            <div class="table-responsive">
-                <table class="table mb-0">
-                    <thead><tr><th>Giáo viên</th><th>Số lớp</th><th>Tổng học phí lớp</th></tr></thead>
-                    <tbody>
-                    @forelse($teacherPerformance as $teacher)
                         <tr>
-                            <td>{{ $teacher->name }}</td>
-                            <td>{{ $teacher->classes_count }}</td>
-                            <td>{{ number_format($teacher->total_tuition ?? 0, 0, ',', '.') }} đ</td>
+                            <td class="text-muted">Đã thu</td>
+                            <td class="fw-semibold text-success text-end">{{ number_format($revenueReport->collected_revenue ?? 0, 0, ',', '.') }} đ</td>
                         </tr>
-                    @empty
-                        <tr><td colspan="3" class="text-muted text-center">Không có dữ liệu</td></tr>
-                    @endforelse
+                        <tr>
+                            <td class="text-muted">Công nợ</td>
+                            <td class="fw-semibold text-danger text-end">{{ number_format(($revenueReport->expected_revenue ?? 0) - ($revenueReport->collected_revenue ?? 0), 0, ',', '.') }} đ</td>
+                        </tr>
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted small fw-semibold mb-3">Báo cáo học phí</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>Trạng thái</th><th class="text-end">Số phiếu</th><th class="text-end">Công nợ</th></tr></thead>
+                        <tbody>
+                        @forelse($feeStatusReport as $row)
+                            <tr>
+                                <td>
+                                    @if($row->status === 'paid')
+                                        <span class="status-dot status-active"></span> Đã thu
+                                    @elseif($row->status === 'partial')
+                                        <span class="status-dot status-warning"></span> Thu một phần
+                                    @else
+                                        <span class="status-dot status-inactive"></span> Chưa thu
+                                    @endif
+                                </td>
+                                <td class="text-end">{{ $row->total_records }}</td>
+                                <td class="text-end fw-semibold">{{ number_format($row->outstanding ?? 0, 0, ',', '.') }} đ</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3"><div class="empty-state"><i class="bi bi-inbox"></i><p>Không có dữ liệu</p></div></td></tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- Students & Teachers --}}
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted small fw-semibold mb-3">Báo cáo học sinh</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>Trạng thái</th><th class="text-end">Số lượng</th></tr></thead>
+                        <tbody>
+                        @forelse($studentReport as $row)
+                            <tr>
+                                <td>
+                                    @if($row->status === 'active')
+                                        <span class="status-dot status-active"></span> Đang học
+                                    @elseif($row->status === 'inactive')
+                                        <span class="status-dot status-inactive"></span> Nghỉ học
+                                    @else
+                                        <span class="status-dot status-warning"></span> {{ $row->status }}
+                                    @endif
+                                </td>
+                                <td class="text-end fw-semibold">{{ $row->total }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2"><div class="empty-state"><i class="bi bi-people"></i><p>Không có dữ liệu</p></div></td></tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card">
+            <div class="card-body">
+                <h6 class="text-uppercase text-muted small fw-semibold mb-3">Hiệu suất giáo viên</h6>
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead><tr><th>Giáo viên</th><th class="text-end">Số lớp</th><th class="text-end">Tổng học phí lớp</th></tr></thead>
+                        <tbody>
+                        @forelse($teacherPerformance as $teacher)
+                            <tr>
+                                <td class="fw-semibold">{{ $teacher->name }}</td>
+                                <td class="text-end">{{ $teacher->classes_count }}</td>
+                                <td class="text-end fw-semibold">{{ number_format($teacher->total_tuition ?? 0, 0, ',', '.') }} đ</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="3"><div class="empty-state"><i class="bi bi-person-badge"></i><p>Không có dữ liệu</p></div></td></tr>
+                        @endforelse
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>

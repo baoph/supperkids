@@ -1,40 +1,40 @@
 @csrf
 <div class="row g-3">
     <div class="col-md-6">
-        <label class="form-label">Tên lớp *</label>
-        <input type="text" name="name" value="{{ old('name', $class->name ?? '') }}" class="form-control @error('name') is-invalid @enderror">
+        <label class="form-label">Tên lớp <span class="text-danger">*</span></label>
+        <input type="text" name="name" value="{{ old('name', $class->name ?? '') }}" class="form-control @error('name') is-invalid @enderror" placeholder="VD: Lớp Toán nâng cao K5">
         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">Môn học *</label>
-        <input type="text" name="subject" value="{{ old('subject', $class->subject ?? '') }}" class="form-control @error('subject') is-invalid @enderror">
+        <label class="form-label">Môn học <span class="text-danger">*</span></label>
+        <input type="text" name="subject" value="{{ old('subject', $class->subject ?? '') }}" class="form-control @error('subject') is-invalid @enderror" placeholder="VD: Toán, Tiếng Anh, Vẽ...">
         @error('subject') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
         <label class="form-label">Lịch học</label>
-        <input type="text" name="schedule" value="{{ old('schedule', $class->schedule ?? '') }}" class="form-control">
+        <input type="text" name="schedule" value="{{ old('schedule', $class->schedule ?? '') }}" class="form-control" placeholder="VD: T2, T4, T6 — 18:00-19:30">
     </div>
     <div class="col-md-6">
         <label class="form-label">Giáo viên phụ trách</label>
         <select name="teacher_id" class="form-select">
-            <option value="">-- Chọn giáo viên --</option>
+            <option value="">— Chọn giáo viên —</option>
             @foreach($teachers as $teacher)
                 <option value="{{ $teacher->id }}" @selected(old('teacher_id', $class->teacher_id ?? '') == $teacher->id)>{{ $teacher->name }}</option>
             @endforeach
         </select>
     </div>
     <div class="col-md-4">
-        <label class="form-label">Sĩ số tối đa *</label>
-        <input type="number" min="1" name="capacity" value="{{ old('capacity', $class->capacity ?? 20) }}" class="form-control @error('capacity') is-invalid @enderror">
+        <label class="form-label">Sĩ số tối đa <span class="text-danger">*</span></label>
+        <input type="number" min="1" name="capacity" value="{{ old('capacity', $class->capacity ?? 20) }}" class="form-control @error('capacity') is-invalid @enderror" placeholder="20">
         @error('capacity') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label">Học phí *</label>
-        <input type="number" min="0" step="0.01" name="tuition_fee" value="{{ old('tuition_fee', $class->tuition_fee ?? 0) }}" class="form-control @error('tuition_fee') is-invalid @enderror">
+        <label class="form-label">Học phí <span class="text-danger">*</span></label>
+        <input type="number" min="0" step="0.01" name="tuition_fee" value="{{ old('tuition_fee', $class->tuition_fee ?? 0) }}" class="form-control @error('tuition_fee') is-invalid @enderror" placeholder="0">
         @error('tuition_fee') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-4">
-        <label class="form-label">Trạng thái *</label>
+        <label class="form-label">Trạng thái <span class="text-danger">*</span></label>
         <select name="status" class="form-select">
             <option value="open" @selected(old('status', $class->status ?? 'open') === 'open')>Mở lớp</option>
             <option value="closed" @selected(old('status', $class->status ?? 'open') === 'closed')>Đóng lớp</option>
@@ -51,6 +51,6 @@
     </div>
 </div>
 <div class="mt-4 d-flex gap-2">
-    <button class="btn btn-primary">Lưu</button>
-    <a href="{{ route('classes.index') }}" class="btn btn-secondary">Quay lại</a>
+    <button class="btn btn-primary px-4">Lưu</button>
+    <a href="{{ route('classes.index') }}" class="btn btn-outline-secondary px-4">Hủy</a>
 </div>

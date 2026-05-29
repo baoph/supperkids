@@ -1,8 +1,11 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="card border-0 shadow-sm">
-    <div class="card-header bg-white"><h5 class="mb-0">Thêm giáo viên</h5></div>
+<div class="page-header">
+    <h4 class="page-title">Thêm giáo viên</h4>
+    <p class="page-subtitle">Điền thông tin giáo viên mới</p>
+</div>
+<div class="card">
     <div class="card-body">
         <form action="{{ route('teachers.store') }}" method="POST">
             @include('teachers._form')
