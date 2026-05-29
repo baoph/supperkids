@@ -1,42 +1,35 @@
 @csrf
 <div class="row g-3">
     <div class="col-md-6">
-        <label class="form-label">Họ tên *</label>
-        <input type="text" name="name" value="{{ old('name', $student->name ?? '') }}" class="form-control @error('name') is-invalid @enderror">
+        <label class="form-label fw-semibold">Họ tên <span class="text-danger">*</span></label>
+        <input type="text" name="name" value="{{ old('name', $student->name ?? '') }}" class="form-control @error('name') is-invalid @enderror" placeholder="Nhập họ và tên học sinh">
         @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
-    <div class="col-md-3">
-        <label class="form-label">Ngày sinh</label>
-        <input type="date" name="date_of_birth" value="{{ old('date_of_birth', isset($student->date_of_birth) ? $student->date_of_birth->format('Y-m-d') : '') }}" class="form-control">
-    </div>
-    <div class="col-md-3">
-        <label class="form-label">Giới tính *</label>
-        <select name="gender" class="form-select">
-            <option value="male" @selected(old('gender', $student->gender ?? 'male') === 'male')>Nam</option>
-            <option value="female" @selected(old('gender', $student->gender ?? '') === 'female')>Nữ</option>
-            <option value="other" @selected(old('gender', $student->gender ?? '') === 'other')>Khác</option>
-        </select>
+    <div class="col-md-6">
+        <label class="form-label fw-semibold">CCCD</label>
+        <input type="text" name="cccd" value="{{ old('cccd', $student->cccd ?? '') }}" class="form-control @error('cccd') is-invalid @enderror" placeholder="Số căn cước công dân" maxlength="20">
+        @error('cccd') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">Phụ huynh *</label>
-        <input type="text" name="parent_name" value="{{ old('parent_name', $student->parent_name ?? '') }}" class="form-control @error('parent_name') is-invalid @enderror">
+        <label class="form-label fw-semibold">Phụ huynh <span class="text-danger">*</span></label>
+        <input type="text" name="parent_name" value="{{ old('parent_name', $student->parent_name ?? '') }}" class="form-control @error('parent_name') is-invalid @enderror" placeholder="Tên phụ huynh">
         @error('parent_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">SĐT phụ huynh *</label>
-        <input type="text" name="parent_phone" value="{{ old('parent_phone', $student->parent_phone ?? '') }}" class="form-control @error('parent_phone') is-invalid @enderror">
+        <label class="form-label fw-semibold">SĐT phụ huynh <span class="text-danger">*</span></label>
+        <input type="text" name="parent_phone" value="{{ old('parent_phone', $student->parent_phone ?? '') }}" class="form-control @error('parent_phone') is-invalid @enderror" placeholder="Số điện thoại phụ huynh">
         @error('parent_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">Email</label>
-        <input type="email" name="email" value="{{ old('email', $student->email ?? '') }}" class="form-control">
+        <label class="form-label fw-semibold">Email</label>
+        <input type="email" name="email" value="{{ old('email', $student->email ?? '') }}" class="form-control" placeholder="Email liên hệ">
     </div>
     <div class="col-md-6">
-        <label class="form-label">Địa chỉ</label>
-        <input type="text" name="address" value="{{ old('address', $student->address ?? '') }}" class="form-control">
+        <label class="form-label fw-semibold">Địa chỉ</label>
+        <input type="text" name="address" value="{{ old('address', $student->address ?? '') }}" class="form-control" placeholder="Địa chỉ">
     </div>
     <div class="col-md-6">
-        <label class="form-label">Trạng thái *</label>
+        <label class="form-label fw-semibold">Trạng thái <span class="text-danger">*</span></label>
         <select name="status" class="form-select">
             <option value="new" @selected(old('status', $student->status ?? 'new') === 'new')>Mới</option>
             <option value="studying" @selected(old('status', $student->status ?? '') === 'studying')>Đang học</option>
@@ -44,15 +37,18 @@
         </select>
     </div>
     <div class="col-md-6">
-        <label class="form-label">Lớp đang học</label>
-        <select name="class_ids[]" class="form-select" multiple size="5">
+        <label class="form-label fw-semibold">Lớp đang học</label>
+        <select name="class_ids[]" class="form-select" multiple size="4">
             @foreach($classes as $class)
                 <option value="{{ $class->id }}" @selected(in_array($class->id, old('class_ids', $selectedClasses ?? [])))>{{ $class->name }}</option>
             @endforeach
         </select>
+        <small class="text-muted">Giữ Ctrl để chọn nhiều lớp</small>
     </div>
 </div>
 <div class="mt-4 d-flex gap-2">
-    <button class="btn btn-primary">Lưu</button>
-    <a href="{{ route('students.index') }}" class="btn btn-secondary">Quay lại</a>
+    <button class="btn btn-primary px-4">
+        <i class="bi bi-check-lg me-1"></i> Lưu
+    </button>
+    <a href="{{ route('students.index') }}" class="btn btn-outline-secondary px-4">Quay lại</a>
 </div>

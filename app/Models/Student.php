@@ -13,17 +13,12 @@ class Student extends Model
 
     protected $fillable = [
         'name',
-        'date_of_birth',
-        'gender',
+        'cccd',
         'parent_name',
         'parent_phone',
         'email',
         'address',
         'status',
-    ];
-
-    protected $casts = [
-        'date_of_birth' => 'date',
     ];
 
     public function classes(): BelongsToMany
