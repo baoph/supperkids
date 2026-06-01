@@ -102,5 +102,70 @@
     </div>
 
     @stack('scripts')
+
+    {{-- Currency Input Formatter — Chuẩn Việt Nam --}}
+    <script>
+    (function() {
+        function formatCurrency(value) {
+            var num = String(value).replace(/[^\d]/g, '');
+            num = num.replace(/^0+(?=\d)/, '');
+            return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        }
+
+        function parseCurrency(value) {
+            return String(value).replace(/[^\d]/g, '');
+        }
+
+        function initCurrencyInputs() {
+            var inputs = document.querySelectorAll('.currency-input');
+            inputs.forEach(function(input) {
+                if (input.dataset.currencyInitialized) return;
+                input.dataset.currencyInitialized = 'true';
+
+                var targetName = input.getAttribute('data-target');
+                var form = input.closest('form');
+                var hiddenInput = form ? form.querySelector('input[type="hidden"][name="' + targetName + '"]') : null;
+
+                // Format initial value
+                if (input.value) {
+                    var raw = parseCurrency(input.value);
+                    input.value = (raw && raw !== '0') ? formatCurrency(raw) : '0';
+                    if (hiddenInput) hiddenInput.value = raw || '0';
+                }
+
+                // Real-time formatting
+                input.addEventListener('input', function() {
+                    var cursorPos = input.selectionStart;
+                    var oldLen = input.value.length;
+                    var raw = parseCurrency(input.value);
+                    input.value = formatCurrency(raw);
+                    if (hiddenInput) hiddenInput.value = raw;
+                    var newLen = input.value.length;
+                    var newPos = Math.max(0, cursorPos + (newLen - oldLen));
+                    input.setSelectionRange(newPos, newPos);
+                });
+
+                // Sync on blur
+                input.addEventListener('blur', function() {
+                    var raw = parseCurrency(input.value);
+                    if (hiddenInput) hiddenInput.value = raw || '0';
+                    input.value = raw ? formatCurrency(raw) : '0';
+                });
+
+                // Safety net on submit
+                if (form) {
+                    form.addEventListener('submit', function() {
+                        if (hiddenInput) hiddenInput.value = parseCurrency(input.value);
+                    });
+                }
+            });
+        }
+
+        // Run immediately (script is at bottom of body, DOM is ready)
+        initCurrencyInputs();
+        // Also run on DOMContentLoaded as fallback
+        document.addEventListener('DOMContentLoaded', initCurrencyInputs);
+    })();
+    </script>
 </body>
 </html>
