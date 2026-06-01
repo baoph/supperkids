@@ -1,22 +1,22 @@
 import './bootstrap';
 
 /**
- * Currency Input Formatter
- * Formats number inputs with thousand separators (e.g., 1,000,000)
+ * Currency Input Formatter — Chuẩn Việt Nam
+ * Formats number inputs with dot separators (e.g., 1.500.000)
  * and syncs the raw numeric value to a hidden input for form submission.
  */
 document.addEventListener('DOMContentLoaded', function () {
-    // Format a number string with comma separators
+    // Format a number string with dot separators (Vietnamese standard)
     function formatCurrency(value) {
         // Remove all non-digit characters
         let num = value.replace(/[^\d]/g, '');
         // Remove leading zeros (but keep at least one zero)
         num = num.replace(/^0+(?=\d)/, '');
-        // Add thousand separators
-        return num.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        // Add thousand separators using dots
+        return num.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
-    // Parse formatted string back to raw number
+    // Parse formatted string back to raw number (strip dots and any non-digits)
     function parseCurrency(value) {
         return value.replace(/[^\d]/g, '');
     }
@@ -32,9 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
         // Format initial value on page load
         if (input.value) {
             const raw = parseCurrency(input.value);
-            input.value = formatCurrency(raw);
+            input.value = raw && raw !== '0' ? formatCurrency(raw) : '0';
             if (hiddenInput) {
-                hiddenInput.value = raw;
+                hiddenInput.value = raw || '0';
             }
         }
 
@@ -60,10 +60,10 @@ document.addEventListener('DOMContentLoaded', function () {
         input.addEventListener('blur', function () {
             const raw = parseCurrency(input.value);
             if (hiddenInput) {
-                hiddenInput.value = raw;
+                hiddenInput.value = raw || '0';
             }
             // Re-format display
-            input.value = raw ? formatCurrency(raw) : '';
+            input.value = raw ? formatCurrency(raw) : '0';
         });
 
         // Sync before form submit (safety net)
