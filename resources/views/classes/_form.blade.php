@@ -30,8 +30,12 @@
     </div>
     <div class="col-md-4">
         <label class="form-label">Học phí <span class="text-danger">*</span></label>
-        <input type="number" min="0" step="0.01" name="tuition_fee" value="{{ old('tuition_fee', $class->tuition_fee ?? 0) }}" class="form-control @error('tuition_fee') is-invalid @enderror" placeholder="0">
-        @error('tuition_fee') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <input type="text" name="tuition_fee_display" value="{{ old('tuition_fee', $class->tuition_fee ?? 0) }}" class="form-control currency-input @error('tuition_fee') is-invalid @enderror" placeholder="VD: 1,500,000" data-target="tuition_fee">
+            <span class="input-group-text">đ</span>
+            <input type="hidden" name="tuition_fee" value="{{ old('tuition_fee', $class->tuition_fee ?? 0) }}">
+            @error('tuition_fee') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
     </div>
     <div class="col-md-4">
         <label class="form-label">Trạng thái <span class="text-danger">*</span></label>

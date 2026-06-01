@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('cccd', 20)->nullable();
             $table->string('parent_name');
-            $table->string('parent_phone', 20);
+            $table->string('parent_phone', 20)->nullable();
             $table->string('email')->nullable();
             $table->string('address')->nullable();
             $table->enum('status', ['new', 'studying', 'inactive'])->default('new');

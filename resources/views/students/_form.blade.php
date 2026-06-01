@@ -16,7 +16,7 @@
         @error('parent_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">SĐT phụ huynh <span class="text-danger">*</span></label>
+        <label class="form-label">SĐT phụ huynh</label>
         <input type="text" name="parent_phone" value="{{ old('parent_phone', $student->parent_phone ?? '') }}" class="form-control @error('parent_phone') is-invalid @enderror" placeholder="Số điện thoại phụ huynh">
         @error('parent_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>

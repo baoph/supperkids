@@ -22,8 +22,12 @@
     </div>
     <div class="col-md-6">
         <label class="form-label">Lương <span class="text-danger">*</span></label>
-        <input type="number" min="0" step="0.01" name="salary" value="{{ old('salary', $teacher->salary ?? 0) }}" class="form-control @error('salary') is-invalid @enderror" placeholder="Mức lương">
-        @error('salary') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <input type="text" name="salary_display" value="{{ old('salary', $teacher->salary ?? 0) }}" class="form-control currency-input @error('salary') is-invalid @enderror" placeholder="VD: 5,000,000" data-target="salary">
+            <span class="input-group-text">đ</span>
+            <input type="hidden" name="salary" value="{{ old('salary', $teacher->salary ?? 0) }}">
+            @error('salary') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
     </div>
     <div class="col-md-6">
         <label class="form-label">Lịch dạy</label>

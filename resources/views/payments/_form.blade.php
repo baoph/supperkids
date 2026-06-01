@@ -23,14 +23,22 @@
 
     <div class="col-md-4">
         <label class="form-label">Số tiền phải thu <span class="text-danger">*</span></label>
-        <input type="number" min="0" step="0.01" name="amount" value="{{ old('amount', $payment->amount ?? 0) }}" class="form-control @error('amount') is-invalid @enderror" placeholder="0">
-        @error('amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <input type="text" name="amount_display" value="{{ old('amount', $payment->amount ?? 0) }}" class="form-control currency-input @error('amount') is-invalid @enderror" placeholder="VD: 1,500,000" data-target="amount">
+            <span class="input-group-text">đ</span>
+            <input type="hidden" name="amount" value="{{ old('amount', $payment->amount ?? 0) }}">
+            @error('amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
     </div>
 
     <div class="col-md-4">
         <label class="form-label">Số tiền đã thu <span class="text-danger">*</span></label>
-        <input type="number" min="0" step="0.01" name="paid_amount" value="{{ old('paid_amount', $payment->paid_amount ?? 0) }}" class="form-control @error('paid_amount') is-invalid @enderror" placeholder="0">
-        @error('paid_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        <div class="input-group">
+            <input type="text" name="paid_amount_display" value="{{ old('paid_amount', $payment->paid_amount ?? 0) }}" class="form-control currency-input @error('paid_amount') is-invalid @enderror" placeholder="VD: 1,500,000" data-target="paid_amount">
+            <span class="input-group-text">đ</span>
+            <input type="hidden" name="paid_amount" value="{{ old('paid_amount', $payment->paid_amount ?? 0) }}">
+            @error('paid_amount') <div class="invalid-feedback">{{ $message }}</div> @enderror
+        </div>
     </div>
 
     <div class="col-md-4">

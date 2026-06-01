@@ -585,3 +585,21 @@ main {
 .form-select {
     -webkit-tap-highlight-color: transparent;
 }
+
+
+
+// ── Currency Input Group ────────────────────────────────────────
+.input-group {
+    .input-group-text {
+        background: #f8f7ff;
+        border-color: #e5e2f5;
+        color: $primary;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+
+    .currency-input {
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.02em;
+    }
+}
