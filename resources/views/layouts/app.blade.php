@@ -113,7 +113,17 @@
         }
 
         function parseCurrency(value) {
-            return String(value).replace(/[^\d]/g, '');
+            // Truncate at decimal point first (handles "1500000.00" from DB)
+            var str = String(value).split('.')[0].split(',')[0];
+            // Then strip any remaining non-digits (handles "1.500.000" formatted strings)
+            // But first check: if string has dots as thousand separators (3-digit groups), strip them
+            var cleaned = String(value);
+            // If value looks like a decimal number (e.g., "1500000.00"), take integer part only
+            if (/^\d+\.\d{1,2}$/.test(cleaned)) {
+                return cleaned.split('.')[0];
+            }
+            // Otherwise strip all non-digits (handles "1.500.000" formatted or plain "1500000")
+            return cleaned.replace(/[^\d]/g, '');
         }
 
         function initCurrencyInputs() {
