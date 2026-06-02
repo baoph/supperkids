@@ -10,11 +10,29 @@ use Illuminate\View\View;
 
 class StudentController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $students = Student::with('classes')->latest()->paginate(10);
+        $query = Student::with('classes')->latest();
 
-        return view('students.index', compact('students'));
+        // Search by name or phone
+        if ($search = $request->input('search')) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('parent_phone', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter by class
+        if ($classId = $request->input('class_id')) {
+            $query->whereHas('classes', function ($q) use ($classId) {
+                $q->where('classes.id', $classId);
+            });
+        }
+
+        $students = $query->paginate(10)->withQueryString();
+        $classes = SchoolClass::orderBy('name')->get();
+
+        return view('students.index', compact('students', 'classes'));
     }
 
     public function create(): View
@@ -29,7 +47,6 @@ class StudentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'cccd' => 'nullable|string|max:20',
-            'parent_name' => 'required|string|max:255',
             'parent_phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',
@@ -72,7 +89,6 @@ class StudentController extends Controller
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'cccd' => 'nullable|string|max:20',
-            'parent_name' => 'required|string|max:255',
             'parent_phone' => 'nullable|string|max:20',
             'email' => 'nullable|email|max:255',
             'address' => 'nullable|string|max:255',

@@ -427,6 +427,19 @@ a { text-decoration: none; }
         color: #d1d5db;
         background: transparent;
     }
+
+    // Constrain any SVGs that slip through (Laravel default pagination)
+    .page-link svg {
+        width: 0.75rem;
+        height: 0.75rem;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .page-link i {
+        font-size: 0.75rem;
+        line-height: 1;
+    }
 }
 
 // ── Dashboard stat cards ──────────────────────────────────────────

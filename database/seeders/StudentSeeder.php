@@ -11,11 +11,11 @@ class StudentSeeder extends Seeder
     public function run(): void
     {
         $students = [
-            ['name' => 'Nguyễn Gia Huy', 'cccd' => '079201000001', 'parent_name' => 'Nguyễn Văn Long', 'parent_phone' => '0912000001', 'email' => 'giahuy@student.vn', 'address' => 'Quận 1, TP.HCM', 'status' => 'studying'],
-            ['name' => 'Trần Minh Châu', 'cccd' => '079201000002', 'parent_name' => 'Trần Thu Trang', 'parent_phone' => '0912000002', 'email' => 'minhchau@student.vn', 'address' => 'Quận 3, TP.HCM', 'status' => 'studying'],
-            ['name' => 'Lê Hoàng Nam', 'cccd' => null, 'parent_name' => 'Lê Mạnh Hùng', 'parent_phone' => '0912000003', 'email' => 'hoangnam@student.vn', 'address' => 'Quận 7, TP.HCM', 'status' => 'new'],
-            ['name' => 'Phạm Ngọc Ánh', 'cccd' => '079201000004', 'parent_name' => 'Phạm Thu Hạnh', 'parent_phone' => '0912000004', 'email' => 'ngocanh@student.vn', 'address' => 'TP Thủ Đức, TP.HCM', 'status' => 'studying'],
-            ['name' => 'Võ Khánh Linh', 'cccd' => null, 'parent_name' => 'Võ Thành Nam', 'parent_phone' => '0912000005', 'email' => 'khanhlinh@student.vn', 'address' => 'Quận Bình Thạnh, TP.HCM', 'status' => 'inactive'],
+            ['name' => 'Nguyễn Gia Huy', 'cccd' => '079201000001', 'parent_phone' => '0912000001', 'email' => 'giahuy@student.vn', 'address' => 'Quận 1, TP.HCM', 'status' => 'studying'],
+            ['name' => 'Trần Minh Châu', 'cccd' => '079201000002', 'parent_phone' => '0912000002', 'email' => 'minhchau@student.vn', 'address' => 'Quận 3, TP.HCM', 'status' => 'studying'],
+            ['name' => 'Lê Hoàng Nam', 'cccd' => null, 'parent_phone' => '0912000003', 'email' => 'hoangnam@student.vn', 'address' => 'Quận 7, TP.HCM', 'status' => 'new'],
+            ['name' => 'Phạm Ngọc Ánh', 'cccd' => '079201000004', 'parent_phone' => '0912000004', 'email' => 'ngocanh@student.vn', 'address' => 'TP Thủ Đức, TP.HCM', 'status' => 'studying'],
+            ['name' => 'Võ Khánh Linh', 'cccd' => null, 'parent_phone' => '0912000005', 'email' => 'khanhlinh@student.vn', 'address' => 'Quận Bình Thạnh, TP.HCM', 'status' => 'inactive'],
         ];
 
         foreach ($students as $row) {

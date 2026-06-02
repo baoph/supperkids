@@ -11,11 +11,6 @@
         @error('cccd') <div class="invalid-feedback">{{ $message }}</div> @enderror
     </div>
     <div class="col-md-6">
-        <label class="form-label">Phụ huynh <span class="text-danger">*</span></label>
-        <input type="text" name="parent_name" value="{{ old('parent_name', $student->parent_name ?? '') }}" class="form-control @error('parent_name') is-invalid @enderror" placeholder="Tên phụ huynh">
-        @error('parent_name') <div class="invalid-feedback">{{ $message }}</div> @enderror
-    </div>
-    <div class="col-md-6">
         <label class="form-label">SĐT phụ huynh</label>
         <input type="text" name="parent_phone" value="{{ old('parent_phone', $student->parent_phone ?? '') }}" class="form-control @error('parent_phone') is-invalid @enderror" placeholder="Số điện thoại phụ huynh">
         @error('parent_phone') <div class="invalid-feedback">{{ $message }}</div> @enderror
@@ -36,14 +31,14 @@
             <option value="inactive" @selected(old('status', $student->status ?? '') === 'inactive')>Nghỉ học</option>
         </select>
     </div>
-    <div class="col-md-6">
+    <div class="col-12">
         <label class="form-label">Lớp đang học</label>
         <select name="class_ids[]" class="form-select" multiple size="4">
             @foreach($classes as $class)
                 <option value="{{ $class->id }}" @selected(in_array($class->id, old('class_ids', $selectedClasses ?? [])))>{{ $class->name }}</option>
             @endforeach
         </select>
-        <small style="color:#9ca3af;">Giữ Ctrl để chọn nhiều lớp</small>
+        <small class="text-muted">Giữ Ctrl để chọn nhiều lớp</small>
     </div>
 </div>
 <div class="mt-4 d-flex gap-2">

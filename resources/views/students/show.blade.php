@@ -20,8 +20,7 @@
                 <table class="table table-borderless mb-0">
                     <tr><td style="width:130px;color:#9ca3af;">Họ tên</td><td class="fw-semibold">{{ $student->name }}</td></tr>
                     <tr><td style="color:#9ca3af;">CCCD</td><td>{!! $student->cccd ?? '<span style="color:#d1d5db;font-style:italic;">Chưa cập nhật</span>' !!}</td></tr>
-                    <tr><td style="color:#9ca3af;">Phụ huynh</td><td>{{ $student->parent_name }}</td></tr>
-                    <tr><td style="color:#9ca3af;">SĐT</td><td>{{ $student->parent_phone }}</td></tr>
+                    <tr><td style="color:#9ca3af;">SĐT phụ huynh</td><td>{{ $student->parent_phone ?? '—' }}</td></tr>
                     <tr><td style="color:#9ca3af;">Email</td><td>{{ $student->email ?? 'N/A' }}</td></tr>
                     <tr><td style="color:#9ca3af;">Địa chỉ</td><td>{{ $student->address ?? 'N/A' }}</td></tr>
                     <tr>
