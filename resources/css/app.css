@@ -1,0 +1,13 @@
+.pagination {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+}
+
+.page-item {
+    width: auto !important;
+    flex: 0 0 auto !important;
+}
+
+.page-link {
+    width: auto !important;
+}

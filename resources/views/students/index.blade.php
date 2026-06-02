@@ -111,7 +111,7 @@
     @if($students->hasPages())
         <div class="card-body border-top d-flex justify-content-between align-items-center">
             <span class="showing-text">Hiển thị {{ $students->firstItem() }}–{{ $students->lastItem() }} / {{ $students->total() }} học sinh</span>
-            {{ $students->links() }}
+            {{ $students->links('pagination::bootstrap-5') }}
         </div>
     @endif
 </div>

@@ -62,7 +62,7 @@
     @if($teachers->hasPages())
         <div class="card-body border-top d-flex justify-content-between align-items-center">
             <span class="showing-text">Hiển thị {{ $teachers->firstItem() }}–{{ $teachers->lastItem() }} / {{ $teachers->total() }}</span>
-            {{ $teachers->links() }}
+            {{ $teachers->links('pagination::bootstrap-5') }}
         </div>
     @endif
 </div>

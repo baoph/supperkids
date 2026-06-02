@@ -90,7 +90,7 @@
     @if($payments->hasPages())
         <div class="card-body border-top d-flex justify-content-between align-items-center">
             <span class="showing-text">Hiển thị {{ $payments->firstItem() }}–{{ $payments->lastItem() }} / {{ $payments->total() }} phiếu</span>
-            {{ $payments->links() }}
+            {{ $payments->links('pagination::bootstrap-5') }}
         </div>
     @endif
 </div>
