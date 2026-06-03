@@ -1,17 +1,12 @@
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Inter:300,400,500,600,700');
-
 // Choices.js (searchable select)
 @import '../../node_modules/choices.js/public/assets/styles/choices.css';
-
 // Variables
 @import 'variables';
-
 // Bootstrap
 @import 'bootstrap/scss/bootstrap';
-
 // ── Soft & Modern Theme ─────────────────────────────────────────
-
 // Global
 body {
     -webkit-font-smoothing: antialiased;
@@ -19,23 +14,24 @@ body {
     color: #374151;
 }
 
-a { text-decoration: none; }
+a {
+    text-decoration: none;
+}
 
 // ── Navbar ──────────────────────────────────────────────────────
 .navbar {
     padding: 0.65rem 0;
     background: linear-gradient(135deg, #7c5cfc 0%, #6343e0 100%) !important;
     border: none;
-
     .navbar-brand {
         font-weight: 700;
         font-size: 1.1rem;
         letter-spacing: -0.01em;
         color: #fff !important;
-
-        i { opacity: 0.9; }
+        i {
+            opacity: 0.9;
+        }
     }
-
     .navbar-toggler {
         border: none;
         padding: 0.35rem 0.5rem;
@@ -47,40 +43,38 @@ a { text-decoration: none; }
         position: relative;
         z-index: 1060;
         -webkit-tap-highlight-color: transparent;
-
-        &:focus, &:active {
+        &:focus,
+        &:active {
             outline: none !important;
             box-shadow: none !important;
         }
-
         .navbar-toggler-icon {
             background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.95%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
         }
     }
-
     .nav-link {
-        color: rgba(255,255,255,0.85) !important;
+        color: rgba(255, 255, 255, 0.85) !important;
         font-weight: 500;
         font-size: 0.84rem;
         padding: 0.45rem 0.75rem !important;
         border-radius: 0.5rem;
         transition: all 0.2s ease;
         white-space: nowrap;
-
-        i { font-size: 0.9rem; }
-
+        i {
+            font-size: 0.9rem;
+        }
         &:hover {
             color: #fff !important;
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
         }
-
         &.active {
             color: #fff !important;
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
         }
     }
-
-    .dropdown-toggle::after { margin-left: 0.35rem; }
+    .dropdown-toggle::after {
+        margin-left: 0.35rem;
+    }
 }
 
 // Mobile menu
@@ -91,7 +85,6 @@ a { text-decoration: none; }
             border-radius: 0 0 $border-radius-lg $border-radius-lg;
             padding: 0.75rem;
             margin-top: 0.5rem;
-
             // Fix: ensure collapse is interactive
             &.collapsing,
             &.show {
@@ -99,11 +92,9 @@ a { text-decoration: none; }
                 z-index: 1050;
             }
         }
-
         .navbar-nav {
             gap: 0.15rem !important;
         }
-
         .nav-link {
             padding: 0.6rem 0.85rem !important;
             border-radius: 0.5rem;
@@ -113,12 +104,11 @@ a { text-decoration: none; }
 
 // ── Cards ────────────────────────────────────────────────────────
 .card {
-    border: 1px solid rgba(0,0,0,0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
     border-radius: $card-border-radius;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.02);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
     background: #fff;
     overflow: hidden;
-
     .card-header {
         background: #fff;
         border-bottom: 1px solid #f3f4f6;
@@ -127,7 +117,6 @@ a { text-decoration: none; }
         font-size: 0.9rem;
         color: #1f2937;
     }
-
     .card-body {
         padding: 1.25rem;
     }
@@ -136,7 +125,6 @@ a { text-decoration: none; }
 // ── Tables ────────────────────────────────────────────────────────
 .table {
     margin-bottom: 0;
-
     thead th {
         font-weight: 600;
         font-size: 0.75rem;
@@ -148,19 +136,16 @@ a { text-decoration: none; }
         padding: 0.8rem 1rem;
         white-space: nowrap;
     }
-
     tbody td {
         padding: 0.8rem 1rem;
         vertical-align: middle;
         border-bottom: 1px solid #f9fafb;
         color: #374151;
-        font-size: 0.865rem;
+        font-size: 0.765rem;
     }
-
     &.table-hover tbody tr:hover {
         background-color: #faf8ff;
     }
-
     // Borderless variant (used in show views)
     &.table-borderless td {
         border: none;
@@ -169,7 +154,8 @@ a { text-decoration: none; }
 }
 
 // ── Forms ─────────────────────────────────────────────────────────
-.form-control, .form-select {
+.form-control,
+.form-select {
     border-color: #e5e7eb;
     font-size: 0.875rem;
     border-radius: 0.5rem;
@@ -177,12 +163,10 @@ a { text-decoration: none; }
     color: #374151;
     background-color: #fff;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
-
     &::placeholder {
         color: #c0c5cf;
         font-weight: 400;
     }
-
     &:focus {
         border-color: $primary;
         box-shadow: 0 0 0 3px rgba($primary, 0.1);
@@ -210,7 +194,6 @@ a { text-decoration: none; }
     border-radius: 0.5rem;
     transition: all 0.2s ease;
     letter-spacing: 0.01em;
-
     &.btn-sm {
         padding: 0.3rem 0.65rem;
         font-size: 0.78rem;
@@ -221,8 +204,8 @@ a { text-decoration: none; }
     background: $primary;
     border-color: $primary;
     color: #fff;
-
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
         background: darken($primary, 8%);
         border-color: darken($primary, 8%);
         box-shadow: 0 4px 12px rgba($primary, 0.3);
@@ -232,7 +215,6 @@ a { text-decoration: none; }
 .btn-outline-primary {
     color: $primary;
     border-color: #e5e7eb;
-
     &:hover {
         background: rgba($primary, 0.06);
         border-color: $primary;
@@ -243,7 +225,6 @@ a { text-decoration: none; }
 .btn-outline-secondary {
     color: #6b7280;
     border-color: #e5e7eb;
-
     &:hover {
         background: #f9fafb;
         color: #374151;
@@ -254,7 +235,6 @@ a { text-decoration: none; }
 .btn-outline-info {
     color: #6b7280;
     border-color: #e5e7eb;
-
     &:hover {
         background: rgba($info, 0.08);
         border-color: $info;
@@ -265,7 +245,6 @@ a { text-decoration: none; }
 .btn-outline-danger {
     color: #6b7280;
     border-color: #e5e7eb;
-
     &:hover {
         background: rgba($danger, 0.06);
         border-color: $danger;
@@ -277,7 +256,6 @@ a { text-decoration: none; }
 .btn-group-actions {
     display: inline-flex;
     gap: 0.35rem;
-
     .btn {
         border-radius: 0.45rem !important;
         width: 32px;
@@ -290,13 +268,11 @@ a { text-decoration: none; }
         color: #6b7280;
         background: #fff;
         font-size: 0.82rem;
-
         &:hover {
             border-color: $primary;
             color: $primary;
             background: rgba($primary, 0.04);
         }
-
         &.btn-action-danger:hover {
             border-color: $danger;
             color: $danger;
@@ -367,7 +343,6 @@ a { text-decoration: none; }
     gap: 0.4rem;
     font-size: 0.84rem;
     font-weight: 500;
-
     &::before {
         content: '';
         width: 7px;
@@ -375,15 +350,30 @@ a { text-decoration: none; }
         border-radius: 50%;
         flex-shrink: 0;
     }
-
-    &.status-active::before { background: $success; }
-    &.status-inactive::before { background: $danger; }
-    &.status-new::before { background: $info; }
-    &.status-open::before { background: $success; }
-    &.status-closed::before { background: #9ca3af; }
-    &.status-paid::before { background: $success; }
-    &.status-unpaid::before { background: $danger; }
-    &.status-partial::before { background: $warning; }
+    &.status-active::before {
+        background: $success;
+    }
+    &.status-inactive::before {
+        background: $danger;
+    }
+    &.status-new::before {
+        background: $info;
+    }
+    &.status-open::before {
+        background: $success;
+    }
+    &.status-closed::before {
+        background: #9ca3af;
+    }
+    &.status-paid::before {
+        background: $success;
+    }
+    &.status-unpaid::before {
+        background: $danger;
+    }
+    &.status-partial::before {
+        background: $warning;
+    }
 }
 
 // ── Alerts ────────────────────────────────────────────────────────
@@ -402,7 +392,6 @@ a { text-decoration: none; }
 // ── Pagination ────────────────────────────────────────────────────
 .pagination {
     gap: 0.2rem;
-
     .page-link {
         border-radius: 0.45rem !important;
         font-size: 0.82rem;
@@ -411,26 +400,22 @@ a { text-decoration: none; }
         color: #6b7280;
         min-width: 34px;
         text-align: center;
-
         &:hover {
             background: rgba($primary, 0.06);
             border-color: rgba($primary, 0.3);
             color: $primary;
         }
     }
-
     .page-item.active .page-link {
         background: $primary;
         border-color: $primary;
         color: #fff;
         box-shadow: 0 2px 6px rgba($primary, 0.25);
     }
-
     .page-item.disabled .page-link {
         color: #d1d5db;
         background: transparent;
     }
-
     // Constrain any SVGs that slip through (Laravel default pagination)
     .page-link svg {
         width: 0.75rem;
@@ -438,7 +423,6 @@ a { text-decoration: none; }
         display: inline-block;
         vertical-align: middle;
     }
-
     .page-link i {
         font-size: 0.75rem;
         line-height: 1;
@@ -450,14 +434,12 @@ a { text-decoration: none; }
     position: relative;
     overflow: hidden;
     border: none !important;
-
     .stat-value {
         font-weight: 700;
         font-size: 1.75rem;
         color: #1f2937;
         line-height: 1.2;
     }
-
     .stat-label {
         font-size: 0.78rem;
         font-weight: 500;
@@ -465,7 +447,6 @@ a { text-decoration: none; }
         text-transform: uppercase;
         letter-spacing: 0.03em;
     }
-
     .stat-icon-bg {
         width: 42px;
         height: 42px;
@@ -486,16 +467,14 @@ a { text-decoration: none; }
 
 // ── Dropdown ──────────────────────────────────────────────────────
 .dropdown-menu {
-    border: 1px solid rgba(0,0,0,0.05);
-    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
     border-radius: $border-radius;
     padding: 0.4rem;
-
     .dropdown-item {
         border-radius: 0.35rem;
         padding: 0.5rem 0.85rem;
         font-size: 0.84rem;
-
         &:hover {
             background: #f5f3ff;
             color: $primary;
@@ -506,14 +485,12 @@ a { text-decoration: none; }
 // ── Page header ───────────────────────────────────────────────────
 .page-header {
     margin-bottom: 1.25rem;
-
     .page-title {
         font-weight: 700;
         font-size: 1.25rem;
         color: #1f2937;
         margin-bottom: 0.15rem;
     }
-
     .page-subtitle {
         font-size: 0.84rem;
         color: #9ca3af;
@@ -527,8 +504,14 @@ main {
 }
 
 @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 // ── Showing text ──────────────────────────────────────────────────
@@ -542,14 +525,12 @@ main {
     padding: 3rem 1rem;
     text-align: center;
     color: #9ca3af;
-
     i {
         font-size: 2.5rem;
         margin-bottom: 0.75rem;
         display: block;
         opacity: 0.5;
     }
-
     p {
         font-size: 0.875rem;
         margin: 0;
@@ -561,7 +542,7 @@ main {
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: rgba(255,255,255,0.25);
+    background: rgba(255, 255, 255, 0.25);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -579,13 +560,11 @@ main {
             gap: 0.75rem;
         }
     }
-
     .table thead th,
     .table tbody td {
         padding: 0.6rem 0.65rem;
         font-size: 0.78rem;
     }
-
     .stat-card .stat-value {
         font-size: 1.35rem;
     }
@@ -602,8 +581,6 @@ main {
     -webkit-tap-highlight-color: transparent;
 }
 
-
-
 // ── Currency Input Group ────────────────────────────────────────
 .input-group {
     .input-group-text {
@@ -613,18 +590,15 @@ main {
         font-weight: 500;
         font-size: 0.85rem;
     }
-
     .currency-input {
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.02em;
     }
 }
 
-
 // ── Choices.js — Soft & Modern theme ────────────────────────────
 .choices {
     margin-bottom: 0;
-
     &:focus-within .choices__inner {
         border-color: $primary;
         box-shadow: 0 0 0 0.2rem rgba(124, 92, 252, 0.15);

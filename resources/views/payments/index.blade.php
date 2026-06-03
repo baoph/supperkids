@@ -30,7 +30,7 @@
                     <input type="text" name="student_name" value="{{ request('student_name') }}" class="form-control" placeholder="Tìm theo tên học sinh...">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="form-label small text-muted mb-1">Ngày tạo</label>
                 <div class="d-flex align-items-center gap-1">
                     <input type="date" name="created_from" value="{{ request('created_from') }}" class="form-control" title="Từ ngày">
@@ -38,7 +38,7 @@
                     <input type="date" name="created_to" value="{{ request('created_to') }}" class="form-control" title="Đến ngày">
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <label class="form-label small text-muted mb-1">Ngày thanh toán</label>
                 <div class="d-flex align-items-center gap-1">
                     <input type="date" name="payment_from" value="{{ request('payment_from') }}" class="form-control" title="Từ ngày">
@@ -46,7 +46,7 @@
                     <input type="date" name="payment_to" value="{{ request('payment_to') }}" class="form-control" title="Đến ngày">
                 </div>
             </div>
-            <div class="col-md-3 d-flex gap-2">
+            <div class="col-md-1 d-flex gap-2">
                 <button type="submit" class="btn btn-primary flex-grow-1">
                     <i class="bi bi-funnel me-1"></i> Lọc
                 </button>
