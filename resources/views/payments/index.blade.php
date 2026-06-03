@@ -7,16 +7,7 @@
         <p class="page-subtitle">Theo dõi thu học phí và công nợ</p>
     </div>
     <div class="d-flex gap-2 align-items-center flex-wrap">
-        <!-- <form method="GET" class="d-flex gap-2">
-            <select name="status" class="form-select form-select-sm" style="min-width:160px">
-                <option value="">Tất cả trạng thái</option>
-                <option value="unpaid" @selected($status === 'unpaid')>Chưa thu</option>
-                <option value="partial" @selected($status === 'partial')>Thu một phần</option>
-                <option value="paid" @selected($status === 'paid')>Đã thu</option>
-            </select>
-            <button class="btn btn-outline-primary btn-sm"><i class="bi bi-funnel me-1"></i>Lọc</button>
-        </form> -->
-        <a href="{{ route('payments.export', request()->only('status')) }}" class="btn btn-outline-success">
+        <a href="{{ route('payments.export', request()->only('student_name', 'created_from', 'created_to', 'payment_from', 'payment_to', 'status')) }}" class="btn btn-outline-success">
             <i class="bi bi-file-earmark-excel me-1"></i> Xuất Excel
         </a>
         <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#importModal">
@@ -26,28 +17,47 @@
             <i class="bi bi-plus-lg me-1"></i> Thêm học phí
         </a>
     </div>
-    <div class="card mb-3">
+</div>
+
+{{-- Filter --}}
+<div class="card mb-3">
     <div class="card-body py-3">
-        <form method="GET" action="{{ route('students.index') }}" class="row g-2 align-items-end">
-            <div class="col-md-5">
+        <form method="GET" action="{{ route('payments.index') }}" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Tên học sinh</label>
                 <div class="input-group">
                     <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
-                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
+                    <input type="text" name="student_name" value="{{ request('student_name') }}" class="form-control" placeholder="Tìm theo tên học sinh...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Ngày tạo</label>
+                <div class="d-flex align-items-center gap-1">
+                    <input type="date" name="created_from" value="{{ request('created_from') }}" class="form-control" title="Từ ngày">
+                    <span class="text-muted">–</span>
+                    <input type="date" name="created_to" value="{{ request('created_to') }}" class="form-control" title="Đến ngày">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small text-muted mb-1">Ngày thanh toán</label>
+                <div class="d-flex align-items-center gap-1">
+                    <input type="date" name="payment_from" value="{{ request('payment_from') }}" class="form-control" title="Từ ngày">
+                    <span class="text-muted">–</span>
+                    <input type="date" name="payment_to" value="{{ request('payment_to') }}" class="form-control" title="Đến ngày">
                 </div>
             </div>
             <div class="col-md-3 d-flex gap-2">
                 <button type="submit" class="btn btn-primary flex-grow-1">
                     <i class="bi bi-funnel me-1"></i> Lọc
                 </button>
-                @if(request('search') || request('class_id'))
-                    <a href="{{ route('students.index') }}" class="btn btn-outline-secondary">
-                        <i class="bi bi-x-lg"></i>
+                @if(request('student_name') || request('created_from') || request('created_to') || request('payment_from') || request('payment_to') || request('status'))
+                    <a href="{{ route('payments.index') }}" class="btn btn-outline-secondary" title="Xóa bộ lọc">
+                        <i class="bi bi-arrow-counterclockwise me-1"></i> Reset
                     </a>
                 @endif
             </div>
         </form>
     </div>
-</div>
 </div>
 
 {{-- Import Modal --}}
@@ -135,7 +145,7 @@
                     </tr>
                 @empty
                     <tr>
-                        <td colspan="9">
+                        <td colspan="10">
                             <div class="empty-state">
                                 <i class="bi bi-wallet2"></i>
                                 <p>Chưa có dữ liệu học phí</p>

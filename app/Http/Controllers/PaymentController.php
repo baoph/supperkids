@@ -31,14 +31,52 @@ class PaymentController extends Controller
         'paid' => 'Đã thu',
     ];
 
+    /**
+     * Build a filtered payment query shared by index() and export().
+     * Supports: student name (LIKE), created_at range, payment_date range, status.
+     */
+    private function buildFilteredQuery(Request $request)
+    {
+        $query = Payment::with(['student', 'schoolClass']);
+
+        // Student name search (approximate, LIKE %...%)
+        if ($name = trim((string) $request->input('student_name'))) {
+            $query->whereHas('student', function ($q) use ($name) {
+                $q->where('name', 'like', "%{$name}%");
+            });
+        }
+
+        // Created date range
+        if ($createdFrom = $request->input('created_from')) {
+            $query->whereDate('created_at', '>=', $createdFrom);
+        }
+        if ($createdTo = $request->input('created_to')) {
+            $query->whereDate('created_at', '<=', $createdTo);
+        }
+
+        // Payment date range
+        if ($paymentFrom = $request->input('payment_from')) {
+            $query->whereDate('payment_date', '>=', $paymentFrom);
+        }
+        if ($paymentTo = $request->input('payment_to')) {
+            $query->whereDate('payment_date', '<=', $paymentTo);
+        }
+
+        // Existing status filter (kept for compatibility)
+        if ($status = $request->string('status')->toString()) {
+            $query->where('status', $status);
+        }
+
+        return $query->latest();
+    }
+
     public function index(Request $request): View
     {
         $status = $request->string('status')->toString();
 
-        $payments = Payment::with(['student', 'schoolClass'])
-            ->when($status, fn ($query) => $query->where('status', $status))
-            ->latest()
-            ->paginate(10);
+        $payments = $this->buildFilteredQuery($request)
+            ->paginate(10)
+            ->withQueryString();
             // ->get();
 
         // $studentIds = $payments->getCollection()->pluck('student_id')->unique()->filter()->values();
@@ -183,12 +221,7 @@ class PaymentController extends Controller
      */
     public function export(Request $request): StreamedResponse
     {
-        $status = $request->string('status')->toString();
-
-        $payments = Payment::with(['student', 'schoolClass'])
-            ->when($status, fn ($query) => $query->where('status', $status))
-            ->latest()
-            ->get();
+        $payments = $this->buildFilteredQuery($request)->get();
 
         $spreadsheet = new Spreadsheet();
         $sheet = $spreadsheet->getActiveSheet();
