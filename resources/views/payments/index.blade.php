@@ -7,7 +7,7 @@
         <p class="page-subtitle">Theo dõi thu học phí và công nợ</p>
     </div>
     <div class="d-flex gap-2 align-items-center flex-wrap">
-        <form method="GET" class="d-flex gap-2">
+        <!-- <form method="GET" class="d-flex gap-2">
             <select name="status" class="form-select form-select-sm" style="min-width:160px">
                 <option value="">Tất cả trạng thái</option>
                 <option value="unpaid" @selected($status === 'unpaid')>Chưa thu</option>
@@ -15,7 +15,7 @@
                 <option value="paid" @selected($status === 'paid')>Đã thu</option>
             </select>
             <button class="btn btn-outline-primary btn-sm"><i class="bi bi-funnel me-1"></i>Lọc</button>
-        </form>
+        </form> -->
         <a href="{{ route('payments.export', request()->only('status')) }}" class="btn btn-outline-success">
             <i class="bi bi-file-earmark-excel me-1"></i> Xuất Excel
         </a>
@@ -26,6 +26,28 @@
             <i class="bi bi-plus-lg me-1"></i> Thêm học phí
         </a>
     </div>
+    <div class="card mb-3">
+    <div class="card-body py-3">
+        <form method="GET" action="{{ route('students.index') }}" class="row g-2 align-items-end">
+            <div class="col-md-5">
+                <div class="input-group">
+                    <span class="input-group-text bg-white"><i class="bi bi-search"></i></span>
+                    <input type="text" name="search" value="{{ request('search') }}" class="form-control" placeholder="Tìm kiếm theo tên hoặc số điện thoại...">
+                </div>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary flex-grow-1">
+                    <i class="bi bi-funnel me-1"></i> Lọc
+                </button>
+                @if(request('search') || request('class_id'))
+                    <a href="{{ route('students.index') }}" class="btn btn-outline-secondary">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
 </div>
 
 {{-- Import Modal --}}
