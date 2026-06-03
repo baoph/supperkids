@@ -6,9 +6,46 @@
         <h4 class="page-title"><i class="bi bi-people me-2"></i>Quản lý học sinh</h4>
         <p class="page-subtitle">Danh sách tất cả học sinh trong hệ thống</p>
     </div>
-    <a href="{{ route('students.create') }}" class="btn btn-primary px-4">
-        <i class="bi bi-plus-lg me-1"></i> Thêm học sinh
-    </a>
+    <div class="d-flex gap-2 flex-wrap">
+        <a href="{{ route('students.export', request()->only('search', 'class_id')) }}" class="btn btn-outline-success">
+            <i class="bi bi-file-earmark-excel me-1"></i> Xuất Excel
+        </a>
+        <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#importModal">
+            <i class="bi bi-upload me-1"></i> Nhập Excel
+        </button>
+        <a href="{{ route('students.create') }}" class="btn btn-primary px-4">
+            <i class="bi bi-plus-lg me-1"></i> Thêm học sinh
+        </a>
+    </div>
+</div>
+
+{{-- Import Modal --}}
+<div class="modal fade" id="importModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form action="{{ route('students.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-header">
+                    <h5 class="modal-title"><i class="bi bi-upload me-2"></i>Nhập học sinh từ Excel</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-muted small mb-3">Chọn file Excel (.xlsx) theo đúng định dạng mẫu. Tải file mẫu bên dưới nếu cần.</p>
+                    <div class="mb-3">
+                        <label class="form-label">File Excel <span class="text-danger">*</span></label>
+                        <input type="file" name="file" class="form-control" accept=".xlsx,.xls" required>
+                    </div>
+                    <a href="{{ route('students.template') }}" class="text-decoration-none small">
+                        <i class="bi bi-download me-1"></i> Tải file mẫu import
+                    </a>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-check-lg me-1"></i> Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
 
 {{-- Search & Filter --}}

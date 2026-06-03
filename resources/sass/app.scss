@@ -1,6 +1,9 @@
 // Fonts
 @import url('https://fonts.bunny.net/css?family=Inter:300,400,500,600,700');
 
+// Choices.js (searchable select)
+@import '../../node_modules/choices.js/public/assets/styles/choices.css';
+
 // Variables
 @import 'variables';
 
@@ -615,4 +618,59 @@ main {
         font-variant-numeric: tabular-nums;
         letter-spacing: 0.02em;
     }
+}
+
+
+// ── Choices.js — Soft & Modern theme ────────────────────────────
+.choices {
+    margin-bottom: 0;
+
+    &:focus-within .choices__inner {
+        border-color: $primary;
+        box-shadow: 0 0 0 0.2rem rgba(124, 92, 252, 0.15);
+    }
+}
+
+.choices__inner {
+    background-color: #fff;
+    border: 1px solid #e5e2f5;
+    border-radius: $border-radius;
+    min-height: 44px;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.95rem;
+}
+
+.choices[data-type*="select-one"] .choices__inner {
+    padding-bottom: 0.45rem;
+}
+
+.choices__list--dropdown,
+.choices__list[aria-expanded] {
+    border: 1px solid #e5e2f5;
+    border-radius: $border-radius;
+    box-shadow: 0 8px 24px rgba(124, 92, 252, 0.12);
+    margin-top: 4px;
+    z-index: 1056; // above Bootstrap modal
+}
+
+.choices__list--dropdown .choices__item--selectable.is-highlighted,
+.choices__list[aria-expanded] .choices__item--selectable.is-highlighted {
+    background-color: #f3f0ff;
+    color: $primary;
+}
+
+.choices__input {
+    background-color: #f8f7ff;
+    border-radius: $border-radius-sm;
+}
+
+.choices[data-type*="select-one"]::after {
+    border-color: $primary transparent transparent;
+}
+
+.choices__list--dropdown .choices__input {
+    border: 1px solid #e5e2f5;
+    border-radius: $border-radius-sm;
+    margin: 0.25rem;
+    width: calc(100% - 0.5rem);
 }

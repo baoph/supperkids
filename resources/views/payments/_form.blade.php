@@ -2,7 +2,7 @@
 <div class="row g-3">
     <div class="col-md-6">
         <label class="form-label">Học sinh <span class="text-danger">*</span></label>
-        <select name="student_id" class="form-select @error('student_id') is-invalid @enderror">
+        <select name="student_id" class="form-select js-choice @error('student_id') is-invalid @enderror" data-placeholder="— Chọn học sinh —" data-search-placeholder="Tìm theo tên học sinh...">
             <option value="">— Chọn học sinh —</option>
             @foreach($students as $student)
                 <option value="{{ $student->id }}" @selected(old('student_id', $payment->student_id ?? '') == $student->id)>{{ $student->name }}</option>

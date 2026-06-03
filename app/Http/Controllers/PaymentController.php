@@ -9,9 +9,28 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
+use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
+use PhpOffice\PhpSpreadsheet\IOFactory;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Style\Alignment;
+use PhpOffice\PhpSpreadsheet\Style\Fill;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class PaymentController extends Controller
 {
+    private array $methodLabels = [
+        'cash' => 'Tiền mặt',
+        'transfer' => 'Chuyển khoản',
+    ];
+
+    private array $statusLabels = [
+        'unpaid' => 'Chưa thu',
+        'partial' => 'Thu một phần',
+        'paid' => 'Đã thu',
+    ];
+
     public function index(Request $request): View
     {
         $status = $request->string('status')->toString();
@@ -124,5 +143,171 @@ class PaymentController extends Controller
         $payment->delete();
 
         return redirect()->route('payments.index')->with('success', 'Xóa phiếu học phí thành công.');
+    }
+
+    private function excelHeaders(): array
+    {
+        return ['Mã học sinh', 'Tên học sinh', 'Lớp', 'Phải thu (đ)', 'Đã thu (đ)', 'Hình thức', 'Ngày thanh toán', 'Trạng thái', 'Ghi chú'];
+    }
+
+    private function applyHeaderStyle(Spreadsheet $spreadsheet, int $columnCount): void
+    {
+        $sheet = $spreadsheet->getActiveSheet();
+        $lastColumn = Coordinate::stringFromColumnIndex($columnCount);
+        $sheet->getStyle("A1:{$lastColumn}1")->getFont()->setBold(true)->getColor()->setRGB('FFFFFF');
+        $sheet->getStyle("A1:{$lastColumn}1")->getFill()
+            ->setFillType(Fill::FILL_SOLID)
+            ->getStartColor()->setRGB('7C5CFC');
+        $sheet->getStyle("A1:{$lastColumn}1")->getAlignment()->setVertical(Alignment::VERTICAL_CENTER);
+        $sheet->getRowDimension(1)->setRowHeight(22);
+        for ($i = 1; $i <= $columnCount; $i++) {
+            $sheet->getColumnDimensionByColumn($i)->setAutoSize(true);
+        }
+    }
+
+    private function streamSpreadsheet(Spreadsheet $spreadsheet, string $filename): StreamedResponse
+    {
+        $writer = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
+    }
+
+    /**
+     * Export payments to Excel following the active status filter.
+     */
+    public function export(Request $request): StreamedResponse
+    {
+        $status = $request->string('status')->toString();
+
+        $payments = Payment::with(['student', 'schoolClass'])
+            ->when($status, fn ($query) => $query->where('status', $status))
+            ->latest()
+            ->get();
+
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Học phí');
+
+        $headers = $this->excelHeaders();
+        $sheet->fromArray($headers, null, 'A1');
+
+        $row = 2;
+        foreach ($payments as $payment) {
+            $sheet->setCellValue("A{$row}", $payment->student_id);
+            $sheet->setCellValue("B{$row}", $payment->student->name ?? '');
+            $sheet->setCellValue("C{$row}", $payment->schoolClass->name ?? '');
+            $sheet->setCellValue("D{$row}", number_format((float) $payment->amount, 0, ',', '.'));
+            $sheet->setCellValue("E{$row}", number_format((float) $payment->paid_amount, 0, ',', '.'));
+            $sheet->setCellValue("F{$row}", $this->methodLabels[$payment->payment_method] ?? $payment->payment_method);
+            $sheet->setCellValue("G{$row}", $payment->payment_date ? $payment->payment_date->format('Y-m-d') : '');
+            $sheet->setCellValue("H{$row}", $this->statusLabels[$payment->status] ?? $payment->status);
+            $sheet->setCellValue("I{$row}", $payment->note);
+            $row++;
+        }
+
+        $this->applyHeaderStyle($spreadsheet, count($headers));
+
+        return $this->streamSpreadsheet($spreadsheet, 'hoc-phi-' . now()->format('Ymd_His') . '.xlsx');
+    }
+
+    /**
+     * Download an empty Excel template with column headers.
+     */
+    public function template(): StreamedResponse
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Mẫu học phí');
+
+        $headers = $this->excelHeaders();
+        $sheet->fromArray($headers, null, 'A1');
+
+        $sheet->fromArray(
+            ['1', 'Nguyễn Văn A', 'Lớp Toán 1', '1.500.000', '1.500.000', 'Tiền mặt', '2026-06-01', 'Đã thu', 'Học phí tháng 6'],
+            null,
+            'A2'
+        );
+
+        $this->applyHeaderStyle($spreadsheet, count($headers));
+
+        return $this->streamSpreadsheet($spreadsheet, 'mau-import-hoc-phi.xlsx');
+    }
+
+    /**
+     * Import payments from an uploaded Excel file. Linking uses student_id (column A).
+     */
+    public function import(Request $request): RedirectResponse
+    {
+        if (! $request->hasFile('file')) {
+            return redirect()->route('payments.index')->with('error', 'Vui lòng chọn file Excel để import.');
+        }
+
+        try {
+            $spreadsheet = IOFactory::load($request->file('file')->getRealPath());
+            $rows = $spreadsheet->getActiveSheet()->toArray(null, true, true, true);
+
+            $methodByLabel = array_flip($this->methodLabels);
+            $statusByLabel = array_flip($this->statusLabels);
+            $classesByName = SchoolClass::all()->keyBy(fn ($c) => mb_strtolower(trim($c->name)));
+
+            $count = 0;
+            $first = true;
+            foreach ($rows as $row) {
+                if ($first) {
+                    $first = false;
+                    continue;
+                }
+
+                // Linking is done by student_id (column A).
+                $studentId = (int) trim((string) ($row['A'] ?? ''));
+                if ($studentId <= 0) {
+                    continue;
+                }
+
+                $methodRaw = trim((string) ($row['F'] ?? ''));
+                $method = $methodByLabel[$methodRaw] ?? (in_array($methodRaw, ['cash', 'transfer'], true) ? $methodRaw : 'cash');
+
+                $statusRaw = trim((string) ($row['H'] ?? ''));
+                $status = $statusByLabel[$statusRaw] ?? (in_array($statusRaw, ['unpaid', 'partial', 'paid'], true) ? $statusRaw : 'unpaid');
+
+                $classId = null;
+                $className = trim((string) ($row['C'] ?? ''));
+                if ($className !== '') {
+                    $cls = $classesByName->get(mb_strtolower($className));
+                    $classId = $cls?->id;
+                }
+
+                $paymentDate = trim((string) ($row['G'] ?? ''));
+
+                Payment::create([
+                    'student_id' => $studentId,
+                    'class_id' => $classId,
+                    'amount' => $this->parseCurrency($row['D'] ?? 0),
+                    'paid_amount' => $this->parseCurrency($row['E'] ?? 0),
+                    'payment_method' => $method,
+                    'payment_date' => $paymentDate !== '' ? $paymentDate : null,
+                    'status' => $status,
+                    'note' => trim((string) ($row['I'] ?? '')) ?: null,
+                ]);
+
+                $count++;
+            }
+
+            return redirect()->route('payments.index')->with('success', "Đã import thành công {$count} bản ghi.");
+        } catch (\Throwable $e) {
+            return redirect()->route('payments.index')->with('error', 'Import thất bại: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Convert a VND-formatted string (e.g. "1.500.000") to an integer.
+     */
+    private function parseCurrency($value): int
+    {
+        return (int) preg_replace('/[^\d]/', '', (string) $value);
     }
 }
