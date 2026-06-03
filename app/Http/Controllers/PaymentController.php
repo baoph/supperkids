@@ -38,35 +38,37 @@ class PaymentController extends Controller
         $payments = Payment::with(['student', 'schoolClass'])
             ->when($status, fn ($query) => $query->where('status', $status))
             ->latest()
-            ->paginate(10)
-            ->withQueryString();
+            ->paginate(10);
+            // ->get();
 
-        $studentIds = $payments->getCollection()->pluck('student_id')->unique()->filter()->values();
+        // $studentIds = $payments->getCollection()->pluck('student_id')->unique()->filter()->values();
 
-        $debtByStudent = [];
+        // $debtByStudent = [];
 
-        if ($studentIds->isNotEmpty()) {
-            $totalTuitionByStudent = DB::table('class_student')
-                ->join('classes', 'classes.id', '=', 'class_student.class_id')
-                ->selectRaw('class_student.student_id, COALESCE(SUM(classes.tuition_fee), 0) as total_tuition')
-                ->whereIn('class_student.student_id', $studentIds)
-                ->groupBy('class_student.student_id')
-                ->pluck('total_tuition', 'class_student.student_id');
+        // if ($studentIds->isNotEmpty()) {
+        //     $totalTuitionByStudent = DB::table('class_student')
+        //         ->join('classes', 'classes.id', '=', 'class_student.class_id')
+        //         ->selectRaw('class_student.student_id, COALESCE(SUM(classes.tuition_fee), 0) as total_tuition')
+        //         ->whereIn('class_student.student_id', $studentIds)
+        //         ->groupBy('class_student.student_id')
+        //         ->pluck('total_tuition', 'class_student.student_id');
 
-            $totalPaidByStudent = Payment::query()
-                ->selectRaw('student_id, COALESCE(SUM(paid_amount), 0) as total_paid')
-                ->whereIn('student_id', $studentIds)
-                ->groupBy('student_id')
-                ->pluck('total_paid', 'student_id');
+        //     $totalPaidByStudent = Payment::query()
+        //         ->selectRaw('student_id, COALESCE(SUM(paid_amount), 0) as total_paid')
+        //         ->whereIn('student_id', $studentIds)
+        //         ->groupBy('student_id')
+        //         ->pluck('total_paid', 'student_id');
 
-            foreach ($studentIds as $studentId) {
-                $totalTuition = (float) ($totalTuitionByStudent[$studentId] ?? 0);
-                $totalPaid = (float) ($totalPaidByStudent[$studentId] ?? 0);
-                $debtByStudent[$studentId] = max(0, $totalTuition - $totalPaid);
-            }
-        }
+        //     foreach ($studentIds as $studentId) {
+        //         // dd($totalTuitionByStudent[3] );
+        //         $totalTuition = (float) ($totalTuitionByStudent[$studentId] ?? 0);
+        //         $totalPaid = (float) ($totalPaidByStudent[$studentId] ?? 0);
+        //         $debtByStudent[$studentId] = max(0, $totalTuition - $totalPaid);
+        //     }
+        // }
 
-        return view('payments.index', compact('payments', 'status', 'debtByStudent'));
+        // return view('payments.index', compact('payments', 'status', 'debtByStudent'));
+        return view('payments.index', compact('payments', 'status'));
     }
 
     public function create(): View
@@ -147,7 +149,7 @@ class PaymentController extends Controller
 
     private function excelHeaders(): array
     {
-        return ['Mã học sinh', 'Tên học sinh', 'Lớp', 'Phải thu (đ)', 'Đã thu (đ)', 'Hình thức', 'Ngày thanh toán', 'Trạng thái', 'Ghi chú'];
+        return ['Mã học sinh', 'Tên học sinh', 'Lớp', 'Phải thu (đ)', 'Đã thu (đ)', 'Còn nợ (đ)', 'Hình thức', 'Ngày thanh toán', 'Trạng thái', 'Ghi chú'];
     }
 
     private function applyHeaderStyle(Spreadsheet $spreadsheet, int $columnCount): void
@@ -200,12 +202,13 @@ class PaymentController extends Controller
             $sheet->setCellValue("A{$row}", $payment->student_id);
             $sheet->setCellValue("B{$row}", $payment->student->name ?? '');
             $sheet->setCellValue("C{$row}", $payment->schoolClass->name ?? '');
-            $sheet->setCellValue("D{$row}", number_format((float) $payment->amount, 0, ',', '.'));
-            $sheet->setCellValue("E{$row}", number_format((float) $payment->paid_amount, 0, ',', '.'));
-            $sheet->setCellValue("F{$row}", $this->methodLabels[$payment->payment_method] ?? $payment->payment_method);
-            $sheet->setCellValue("G{$row}", $payment->payment_date ? $payment->payment_date->format('Y-m-d') : '');
-            $sheet->setCellValue("H{$row}", $this->statusLabels[$payment->status] ?? $payment->status);
-            $sheet->setCellValue("I{$row}", $payment->note);
+            $sheet->setCellValue("D{$row}", (float) $payment->amount);
+            $sheet->setCellValue("E{$row}", (float) $payment->paid_amount);
+            $sheet->setCellValue("F{$row}", (float) ($payment->amount - $payment->paid_amount));
+            $sheet->setCellValue("G{$row}", $this->methodLabels[$payment->payment_method] ?? $payment->payment_method);
+            $sheet->setCellValue("H{$row}", $payment->payment_date ? $payment->payment_date->format('Y-m-d') : '');
+            $sheet->setCellValue("I{$row}", $this->statusLabels[$payment->status] ?? $payment->status);
+            $sheet->setCellValue("J{$row}", $payment->note);
             $row++;
         }
 

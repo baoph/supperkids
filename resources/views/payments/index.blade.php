@@ -62,7 +62,7 @@
         <table class="table table-hover mb-0">
             <thead>
                 <tr>
-                    <th>Hóa đơn</th>
+                    <th>ngày</th>
                     <th>Học sinh</th>
                     <th>Lớp</th>
                     <th>Phải thu</th>
@@ -70,18 +70,19 @@
                     <th>Còn nợ</th>
                     <th>Hình thức</th>
                     <th>Trạng thái</th>
+                    <th>Ngày thanh toán </th>
                     <th class="text-end">Thao tác</th>
                 </tr>
             </thead>
             <tbody>
                 @forelse($payments as $payment)
                     <tr>
-                        <td class="fw-semibold">{{ $payment->invoice_number }}</td>
+                        <td class="fw-semibold">{{ $payment->created_at->format('d/m/Y') }}</td>
                         <td>{{ $payment->student->name }}</td>
                         <td>{{ $payment->schoolClass->name ?? '—' }}</td>
                         <td>{{ number_format($payment->amount, 0, ',', '.') }} đ</td>
                         <td class="text-success fw-semibold">{{ number_format($payment->paid_amount, 0, ',', '.') }} đ</td>
-                        <td class="text-danger fw-semibold">{{ number_format($debtByStudent[$payment->student_id] ?? 0, 0, ',', '.') }} đ</td>
+                        <td class="text-danger fw-semibold">{{ number_format($payment->amount - $payment->paid_amount, 0, ',', '.') }} đ</td>
                         <td>
                             @if($payment->payment_method === 'cash')
                                 <span class="badge-soft-orange"><i class="bi bi-cash-stack me-1"></i>Tiền mặt</span>
@@ -98,6 +99,7 @@
                                 <span class="status-dot status-inactive"></span> Chưa thu
                             @endif
                         </td>
+                        <td>{{ $payment->payment_date ? $payment->payment_date->format('d/m/Y') : '—' }}</td>
                         <td class="text-end">
                             <div class="btn-group-actions">
                                 <a href="{{ route('payments.show', $payment) }}" class="btn btn-sm btn-light" title="Xem"><i class="bi bi-eye"></i></a>

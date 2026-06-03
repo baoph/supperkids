@@ -58,6 +58,7 @@ class Payment extends Model
         return $this->belongsTo(Student::class);
     }
 
+
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
